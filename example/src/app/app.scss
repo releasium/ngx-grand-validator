@@ -7,7 +7,51 @@
 }
 
 .sidebar {
-  position: fixed;
-  top: 70px;
-  left: 0;
+
+}
+
+/* Сайдбар ссылки */
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+/* Активная/текущая ссылка */
+.sidebar a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Ссылки при наведении мыши */
+.sidebar a:hover:not(.active) {
+  background-color: #ececec;
+  color: #676767;
+}
+
+/* Содержание страницы. Значение свойства margin-left должно соответствовать значению свойства width боковой панели */
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+/* На экранах шириной менее 700 пикселей превратить боковую панель в верхнюю панель */
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+/* На экранах размером менее 400 пикселей панель отображать вертикально, а не горизонтально */
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
 }
