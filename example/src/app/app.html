@@ -1,18 +1,8 @@
 <app-header></app-header>
 
 <div class="content-container">
-  <div class="row">
-    <div class="col-md-2 sidebar">
-      <div class="sidebar">
-        <a routerLinkActive="active" [routerLink]="['docs', 'getting-started']">Getting started</a>
-        <a routerLinkActive="active" [routerLink]="['docs', 'form']">Forms</a>
-        <a routerLinkActive="active" [routerLink]="['docs', 'validators']">Validators</a>
-        <a routerLinkActive="active" [routerLink]="['docs', 'testing']">Testing</a>
-      </div>
-    </div>
-    <div class="col-md-10">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
+
+  <router-outlet></router-outlet>
+
   <app-footer></app-footer>
 </div>

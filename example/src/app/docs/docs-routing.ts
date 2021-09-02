@@ -1,13 +1,16 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-import { docsFormRoutes } from './form/form.router';
+import { DocsComponent } from './docs.component';
 import { gettingStartedRoutes } from './getting-started/getting-started.router';
+import { docsFormRoutes } from './form/form.router';
 import { validatorsRoutes } from './validators/validators.router';
 import { testingRoutes } from './testing/testing.router';
 
-export const docsRoutes: Routes = [
+const routes: Routes = [
   {
-    path: 'docs',
+    path: '',
+    component: DocsComponent,
     children: [
       {
         path: '',
@@ -20,4 +23,13 @@ export const docsRoutes: Routes = [
       ...testingRoutes
     ]
   },
+
 ];
+
+@NgModule({
+  imports: [
+    RouterModule.forChild(routes)
+  ],
+  exports: [RouterModule]
+})
+export class DocsRoutingModule {}

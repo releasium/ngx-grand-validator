@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { homeRoutes } from './home/home.routes';
 import { aboutRoutes } from './about/about.routes';
-import { docsRoutes } from './docs/docs.router';
 
 const routes: Routes = [
   {
@@ -23,7 +22,10 @@ const routes: Routes = [
       ...aboutRoutes
     ]
   },
-  ...docsRoutes
+  {
+    path: 'docs',
+    loadChildren: () => import('./docs/docs.module').then(m => m.DocsModule)
+  }
 ];
 
 @NgModule({

@@ -6,11 +6,13 @@ import { DocsComponent } from './docs.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { ValidatorsComponent } from './validators/validators.component';
 import { TestingComponent } from './testing/testing.component';
+import { DocsRoutingModule } from './docs-routing';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		RouterModule,
+    DocsRoutingModule
 	],
   declarations: [
     DocsComponent,
