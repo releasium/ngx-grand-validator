@@ -7,9 +7,11 @@ import { GettingStartedComponent } from './getting-started/getting-started.compo
 import { ValidatorsComponent } from './validators/validators.component';
 import { TestingComponent } from './testing/testing.component';
 import { DocsRoutingModule } from './docs-routing';
+import { FormDocModule } from './form/form.module';
 
 @NgModule({
 	imports: [
+    FormDocModule,
 		CommonModule,
 		RouterModule,
     DocsRoutingModule

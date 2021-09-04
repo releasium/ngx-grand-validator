@@ -1,2 +1,10 @@
 <h2>Form example</h2>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci autem blanditiis consequuntur deleniti distinctio dolores ea fugiat id iure maxime, mollitia officiis omnis optio pariatur quod ratione reiciendis repellendus repudiandae tempora! Adipisci, amet, deserunt error et eum explicabo facilis fuga illo itaque libero modi nesciunt qui sit vitae voluptates? Accusantium dolorem esse impedit maxime molestias numquam praesentium voluptate voluptatum. Maxime molestias mollitia nemo quibusdam velit! Architecto dolores error hic mollitia possimus ratione rem vel! Ab accusantium, ad aliquam at atque autem cumque dolor dolorem dolorum ea eaque et harum id impedit iure laboriosam maiores modi nam nemo possimus provident rem repellat repellendus reprehenderit sapiente sed, sequi sunt ullam unde voluptatum. Architecto culpa dolorum temporibus ut voluptas. Alias aperiam beatae, consequuntur, doloremque explicabo facere facilis ipsum libero molestiae nesciunt officia placeat porro quasi, sint sit tempora voluptates. Aliquam amet commodi distinctio dolore dolores, earum eum eveniet facere inventore ipsum labore minima necessitatibus neque, numquam officiis quae quam quibusdam quo quod repudiandae similique vel voluptatum? Accusamus asperiores at consequuntur dolor doloribus earum provident quis sapiente. Aperiam assumenda autem blanditiis consequuntur cumque ducimus ea eaque earum iste laborum magnam maiores officiis perspiciatis porro quis repellat rerum, sint soluta sunt veritatis vero voluptatibus?</p>
+
+<form [formGroup]="form">
+  <input type="text" formControlName="name">
+</form>
+
+{{ form.value | json }}
+
+<lib-my-lib></lib-my-lib>
