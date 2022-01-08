@@ -1,6 +1,6 @@
 {
   "name": "lib",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "peerDependencies": {
     "@angular/forms": "^13.1.0",
     "@angular/common": "^13.1.0",
