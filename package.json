@@ -1,10 +1,11 @@
 {
   "name": "@releasium/ngx-grand-validator",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "repository": {
     "type": "git",
     "url": "https://github.com/releasium/ngx-grand-validator.git"
   },
+  "license": "MIT",
   "scripts": {
     "ng": "./node_modules/.bin/ng",
     "start": "./node_modules/.bin/ng serve",
