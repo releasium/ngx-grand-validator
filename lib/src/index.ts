@@ -1,1 +1,5 @@
-export * from './v2/grand-form-group';
+export {
+  GrandValidatorCoreForm,
+  GrandValidationForm,
+  GrandValidation,
+} from './core/grand-form-group';

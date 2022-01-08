@@ -94,7 +94,7 @@ export class GrandValidation {
   }
 }
 
-export class GrandValidatonForm {
+export class GrandValidationForm {
   validation = null;
 
   static createUIForm(): FormGroup {
