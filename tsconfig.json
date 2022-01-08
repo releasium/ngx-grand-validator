@@ -10,8 +10,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "paths": {
       "lib": [
-        "dist/lib/lib",
-        "dist/lib"
+        "dist/ngx-grand-validator/lib",
+        "dist/ngx-grand-validator"
       ]
     },
     "noImplicitReturns": true,
