@@ -1,6 +1,6 @@
 {
-  "name": "lib",
-  "version": "0.1.5",
+  "name": "@releasium/ngx-grand-validator",
+  "version": "0.1.11",
   "peerDependencies": {
     "@angular/forms": "^13.1.0",
     "@angular/common": "^13.1.0",
