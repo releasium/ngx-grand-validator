@@ -11,7 +11,7 @@
     "paths": {
       "lib": [
         "dist/ngx-grand-validator/lib",
-        "dist/ngx-grand-validator"
+        "dist/lib"
       ]
     },
     "noImplicitReturns": true,
