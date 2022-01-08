@@ -1,5 +1,1 @@
-export {
-  GrandValidatorCoreForm,
-  GrandValidationForm,
-  GrandValidation,
-} from './core/grand-form-group';
+export * from './core/grand-form-group';
