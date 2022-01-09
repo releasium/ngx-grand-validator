@@ -22,3 +22,9 @@ export class FormModel extends GrandValidatonFormModel {
 }
 
 ```
+
+
+```
+ const form = FormModel.createUIForm();
+ form.validate();
+```
