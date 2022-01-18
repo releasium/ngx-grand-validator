@@ -1,124 +1,7 @@
 import { AsyncValidatorFn, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { GVErrMessage } from '../validators/gv-err-message';
 
-import { GrandValidatorMessage } from '../validators/message';
-import { GrandValidator } from '../validators/grand-validator';
-
-export class GrandValidation {
-  static control() {
-    return GrandValidation.addControl();
-  }
-
-  static group(modelClass: Object) {
-    return GrandValidation.addGroup(modelClass);
-  }
-
-  static required(msg?: string): Function {
-    return GrandValidation.addControl(GrandValidator.required(), {
-      validator: 'required',
-      text: msg
-    });
-  }
-
-  static addGroup(modelClass: Object) {
-    return function(target: any, propertyKey: string) {
-      const form: GrandValidatorCoreForm = target.uiForm || new GrandValidatorCoreForm();
-      form.addGroup(propertyKey, modelClass);
-
-      if(!target.uiForm) {
-        Reflect.defineProperty(target.constructor, 'validation', {
-          value: form,
-          writable: true
-        });
-        target.grandValidationFrom = form;
-      }
-      return {
-        writable: true
-      };
-    };
-  }
-
-  static addControl(validator?: ValidatorFn, msg: GrandValidatorMessage|null = null, asyncValidator?: AsyncValidatorFn) {
-    return function(target: any, propertyKey: string) {
-      console.log({
-        target
-      });
-      const form: GrandValidatorCoreForm = target.uiForm || new GrandValidatorCoreForm();
-
-      const control = form.addControl(propertyKey, target[propertyKey]);
-
-      if(validator) {
-        form.addValidator(control, validator, msg);
-      }
-
-      if(asyncValidator) {
-        form.addAsyncValidator(control, asyncValidator, msg);
-      }
-
-      if(!target.uiForm) {
-        Reflect.defineProperty(target.constructor, 'validation', {
-          value: form,
-          writable: true
-        });
-        target.uiForm = form;
-      }
-      return {
-        writable: true
-      };
-    };
-  }
-
-  static addArray(modelClasses?: Object, quantityModels?: number) {
-    return function(target: any, propertyKey: string) {
-      const form: GrandValidatorCoreForm = target.uiForm || new GrandValidatorCoreForm();
-      const arrayClasses = [];
-
-      if(quantityModels) {
-        for (let i = 0; i < quantityModels; i++) {
-          arrayClasses.push(modelClasses);
-        }
-      }
-
-      form.addArray(propertyKey, arrayClasses);
-
-      if(!target.uiForm) {
-        Reflect.defineProperty(target.constructor, 'validation', {
-          value: form,
-          writable: true
-        });
-        target.uiForm = form;
-      }
-      return {
-        writable: true
-      };
-    };
-  }
-}
-
-export class GrandValidationForm {
-  validation = null;
-
-  static createUIForm(): FormGroup {
-    const uiForm = this.getUiForm();
-    return uiForm.createUIForm();
-  }
-
-  static genUIMsg() {
-    const uiForm = this.getUiForm();
-    return uiForm.generateErrorMessages();
-  }
-
-  static showUIErrors() {
-    const uiForm = this.getUiForm();
-    return uiForm.showUIErrors();
-  }
-
-  static getUiForm(): GrandValidatorCoreForm {
-    const validation = Reflect.getOwnPropertyDescriptor(this, 'validation');
-    return validation && validation.value;
-  }
-}
-
-export class GrandValidatorCoreForm {
+export class GVCore {
   private form!: FormGroup;
 
   reflectFormControls: { [key: string]: any } = {};
@@ -210,7 +93,7 @@ export class GrandValidatorCoreForm {
     this.reflectFormArrays[name] = modelArrayClasses;
   }
 
-  addValidator(control: FormControl|any, validator: ValidatorFn, msg: GrandValidatorMessage|null) {
+  addValidator(control: FormControl|any, validator: ValidatorFn, msg: GVErrMessage|null) {
     control.validators.push(validator);
     if(!msg || !msg.text) {
       return;
@@ -219,7 +102,7 @@ export class GrandValidatorCoreForm {
     control.msg[msg.validator] = msg.text;
   }
 
-  addAsyncValidator(control: FormControl|any, validator: AsyncValidatorFn, msg: GrandValidatorMessage|null) {
+  addAsyncValidator(control: FormControl|any, validator: AsyncValidatorFn, msg: GVErrMessage|null) {
     control.asyncValidators.push(validator);
     if(!msg || !msg.text || !msg.asyncValidator) {
       return;
