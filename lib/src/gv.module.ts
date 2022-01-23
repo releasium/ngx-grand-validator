@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { GVDirective } from './core/directive/gv.directive';
 import { GV_DEFAULT_ERROR_MESSAGES, GV_ERROR_MESSAGES, GVErrorMessageComponent } from './components';
+import { GvService } from './core';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ export class GVModule {
     return {
       ngModule: GVModule,
       providers: [
+        GvService,
         {
           provide: GV_ERROR_MESSAGES,
           useValue: GV_DEFAULT_ERROR_MESSAGES
