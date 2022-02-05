@@ -1,3 +1,3 @@
-export interface IFormMsg {
+export interface FormMessage {
 	[key: string]: string;
 }

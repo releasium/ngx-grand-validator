@@ -4,10 +4,10 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/for
 import { FormControlType } from './controls.enum';
 import { GVItemConfig, GVRules, GVRule, GVData } from './control-validation.interface';
 import { GVModel } from '../gv';
-import { GvDefaultValidators } from '../../validators/gv-default-validators';
+import { GVDefaultValidators } from '../../validators/gv-default-validators';
 
 @Injectable()
-export class GvService {
+export class GVService {
   constructor(private fb: FormBuilder) {}
 
   createForm(model: typeof GVModel, schema: GVItemConfig[]): FormGroup {
@@ -127,7 +127,7 @@ export class GvService {
 
   private applyValidator(key: string, value: any) {
     // @ts-ignore
-    return GvDefaultValidators[key] ? GvDefaultValidators[key].apply(this, [value]) : null;
+    return GVDefaultValidators[key] ? GVDefaultValidators[key].apply(this, [value]) : null;
   }
 
   private getControlMsgs(controlName: string, model: typeof GVModel) {

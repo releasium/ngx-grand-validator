@@ -2,7 +2,7 @@ import { AsyncValidatorFn, FormGroup, ValidatorFn } from '@angular/forms';
 
 import { GVCore } from './gv-core';
 import { GVErrMessage } from '../validators/gv-err-message';
-import { GvDefaultValidators } from '../validators/gv-default-validators';
+import { GVDefaultValidators } from '../validators/gv-default-validators';
 
 export class GV {
   static control() {
@@ -14,7 +14,7 @@ export class GV {
   }
 
   static required(msg?: string): Function {
-    return GV.addControl(GvDefaultValidators.required(), {
+    return GV.addControl(GVDefaultValidators.required(), {
       validator: 'required',
       text: msg
     });

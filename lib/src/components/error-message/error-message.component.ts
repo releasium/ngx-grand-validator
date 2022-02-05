@@ -1,9 +1,9 @@
 import { Component, Host, Inject, Input, OnDestroy, OnInit, Optional, SkipSelf } from '@angular/core';
-import { AbstractControl, ControlContainer } from '@angular/forms';
+import { AbstractControl, ControlContainer, FormControlStatus } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 import { ErrorMessages, GV_ERROR_MESSAGES } from './default-msgs';
-import { IFormMsg } from './form-msg.type';
+import { FormMessage } from './form-msg.type';
 import { GVDirective } from '../../core/directive/gv.directive';
 
 @Component({
@@ -16,8 +16,8 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 
   private msgGroup: GVDirective;
   private sub: Subscription;
-  private msgs: IFormMsg;
-  private defaultMsgs: { [key: string]: string; };
+  private msgs: FormMessage;
+  private defaultMsgs: FormMessage;
 
   parent: ControlContainer;
   msg: string;
@@ -55,7 +55,7 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 	}
 
 	private initControlStatusSub() {
-		this.sub = this.control.statusChanges.subscribe((status: any) => {
+		this.sub = this.control.statusChanges.subscribe((status: FormControlStatus) => {
 			if(status === 'INVALID') {
 				this.processErrors();
 				return;
@@ -81,8 +81,8 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 		this.setMessage(msg);
 	}
 
-	private setMessage(errorMessage: string = '') {
-		this.msg = errorMessage;
+	private setMessage(msg: string = '') {
+		this.msg = msg;
 	}
 
 	private initMsgs() {
