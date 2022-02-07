@@ -8,6 +8,7 @@ export const minLengthValidator = (min: number) => {
 		}
 
 		const v: number = (control.value + '').length;
+    // TODO check how to replace variables in messages. Interpolation should be work
 		return v < min ? {
 			'minlength': {
 				'requiredValue': min,

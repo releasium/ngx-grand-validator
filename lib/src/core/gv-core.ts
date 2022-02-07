@@ -38,7 +38,7 @@ export class GVCore {
     return message;
   }
 
-  createUIForm(): FormGroup {
+  createForm(): FormGroup {
     const builder = new FormBuilder();
     const controlsConfig: { [key: string]: Object } = {};
 
@@ -50,7 +50,7 @@ export class GVCore {
     for(const name in this.reflectFormGroups) {
       const modelGroupClass = this.reflectFormGroups[name];
       const modelGroup = new modelGroupClass();
-      controlsConfig[name] = modelGroup.uiForm.createUIForm();
+      controlsConfig[name] = modelGroup.uiForm.createForm();
     }
 
     for(const name in this.reflectFormArrays) {
@@ -65,7 +65,7 @@ export class GVCore {
 
       modelArrayClasses.forEach((modelArrayClass: any) => {
         const modelArray = new modelArrayClass({});
-        const group: FormGroup = modelArray.uiForm.createUIForm();
+        const group: FormGroup = modelArray.uiForm.createForm();
         formArrayClasses.push(group);
       });
 

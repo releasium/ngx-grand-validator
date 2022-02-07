@@ -19,6 +19,97 @@ export class GV {
       text: msg
     });
   }
+// TODO validators duplications (currently duplicate in 3 places: here, default and index)
+  static cardNumber(msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.cardNumber(), {
+      validator: 'card',
+      text: msg
+    });
+  }
+
+  static minLength(value: number, msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.minLength(value), {
+      validator: 'minlength',
+      text: msg
+    });
+  }
+
+  static maxLength(value: number, msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.maxLength(value), {
+      validator: 'maxlength',
+      text: msg
+    });
+  }
+
+  static exactLength(value: number | string, msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.exactLength(value), {
+      validator: 'exactLength',
+      text: msg
+    });
+  }
+
+  static min(value: number | string, msg?: string, ignoreValues?: number[]): Function {
+    return GV.addControl(GVDefaultValidators.min(+value), {
+      validator: 'min',
+      text: msg
+    });
+  }
+
+  static max(value: number | string, msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.max(+value), {
+      validator: 'max',
+      text: msg
+    });
+  }
+
+  static digit(msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.digit(), {
+      validator: 'digit',
+      text: msg
+    });
+  }
+
+  static email(msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.email(), {
+      validator: 'email',
+      text: msg
+    });
+  }
+
+  static integer(msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.integer(), {
+      validator: 'integer',
+      text: msg
+    });
+  }
+
+  static pattern(value: RegExp, msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.pattern(value), {
+      validator: 'pattern',
+      text: msg
+    });
+  }
+
+  static equals(propName: string, msg?: string): Function {
+    return GV.addControl(GVDefaultValidators.equals(propName), {
+      validator: 'equals',
+      text: msg
+    });
+  }
+
+  static alphanumeric(params: {whiteSpace: boolean} = {whiteSpace: false}, msg?: string): Function {
+    if (params.whiteSpace) {
+      return GV.addControl(GVDefaultValidators.alphanumeric(params), {
+        validator: 'alphanumericWithSpaces',
+        text: msg
+      });
+    }
+
+    return GV.addControl(GVDefaultValidators.alphanumeric(params), {
+      validator: 'alphanumeric',
+      text: msg
+    });
+  }
 
   static addGroup(modelClass: Object) {
     return function(target: any, propertyKey: string) {
@@ -95,9 +186,9 @@ export class GV {
 export class GVModel {
   validation = null;
 
-  static createUIForm(): FormGroup {
+  static createForm(): FormGroup {
     const uiForm = this.getUiForm();
-    return uiForm.createUIForm();
+    return uiForm.createForm();
   }
 
   static genUIMsg() {

@@ -11,7 +11,7 @@ export class GVService {
   constructor(private fb: FormBuilder) {}
 
   createForm(model: typeof GVModel, schema: GVItemConfig[]): FormGroup {
-    const form = model.createUIForm();
+    const form = model.createForm();
     this.applySchema(schema, form, undefined, model);
 
     return form;
