@@ -1,4 +1,5 @@
 import { ValidatorFn } from '@angular/forms';
+
 import { requiredValidator } from './required/required.validator';
 import { patternValidator } from './pattern/pattern.validator';
 import { digitValidator } from './digit/digit.validator';
@@ -45,7 +46,6 @@ export class GVDefaultValidators {
   static min(min: number): ValidatorFn {
     return minValidator(min);
   }
-
 
   static max(max: number): ValidatorFn {
     return maxValidator(max);

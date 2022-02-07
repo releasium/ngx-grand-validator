@@ -76,10 +76,22 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 
 		const errors: string[] = Object.keys(this.control.errors);
 		const error: string = errors[errors.length - 1];
-		const msg: string = this.getMsg(error);
-
+    const data = this.control.errors[error];
+    let msg: string = this.getMsg(error);
+    msg = this.applyInterpolation(msg, data);
 		this.setMessage(msg);
 	}
+
+  private applyInterpolation(msg: string, data: any): string {
+    if(data) {
+      const keys = Object.keys(data);
+      let result = msg;
+      keys.forEach(key => result = result.replace(`{{${key}}}`, data[key]));
+      return result;
+    }
+
+    return msg;
+  }
 
 	private setMessage(msg: string = '') {
 		this.msg = msg;
