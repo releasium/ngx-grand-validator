@@ -1,0 +1,14 @@
+<ng-container *ngIf="control; else staticContent">
+	<span
+    *ngIf="control.touched && msg"
+    class="text-danger">
+
+		{{msg}}
+	</span>
+</ng-container>
+
+<ng-template #staticContent>
+	<span class="text-danger">
+		<ng-content></ng-content>
+	</span>
+</ng-template>
