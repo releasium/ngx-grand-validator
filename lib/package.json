@@ -1,6 +1,6 @@
 {
   "name": "@releasium/ngx-grand-validator",
-  "version": "16.0.0-next.0",
+  "version": "0.1.12",
   "peerDependencies": {
     "@angular/forms": "^13.1.0",
     "@angular/common": "^13.1.0",
