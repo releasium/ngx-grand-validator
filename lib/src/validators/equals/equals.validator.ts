@@ -1,8 +1,8 @@
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 
 export const equalsValidator = (propName: string) => {
 	return (control: AbstractControl): ValidationErrors | null => {
-		const hasForm = (control.root instanceof FormGroup);
+		const hasForm = (control.root instanceof UntypedFormGroup);
 		if(!hasForm) {
 			return null;
 		}

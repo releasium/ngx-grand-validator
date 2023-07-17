@@ -1,4 +1,4 @@
-import { AsyncValidatorFn, FormGroup, ValidatorFn } from '@angular/forms';
+import { AsyncValidatorFn, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 
 import { GVCore } from './gv-core';
 import { GVErrMessage } from '../validators/gv-err-message';
@@ -186,7 +186,7 @@ export class GV {
 export class GVModel {
   validation = null;
 
-  static createForm(): FormGroup {
+  static createForm(): UntypedFormGroup {
     const uiForm = this.getUiForm();
     return uiForm.createForm();
   }
