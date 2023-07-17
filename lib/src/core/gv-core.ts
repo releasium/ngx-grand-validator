@@ -1,8 +1,8 @@
-import { AsyncValidatorFn, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { AsyncValidatorFn, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { GVErrMessage } from '../validators/gv-err-message';
 
 export class GVCore {
-  private form!: FormGroup;
+  private form!: UntypedFormGroup;
 
   reflectFormControls: { [key: string]: any } = {};
   reflectFormGroups: { [key: string]: any } = {};
@@ -38,8 +38,8 @@ export class GVCore {
     return message;
   }
 
-  createForm(): FormGroup {
-    const builder = new FormBuilder();
+  createForm(): UntypedFormGroup {
+    const builder = new UntypedFormBuilder();
     const controlsConfig: { [key: string]: Object } = {};
 
     for(const name in this.reflectFormControls) {
@@ -61,11 +61,11 @@ export class GVCore {
         formArrayValidators = this.reflectFormControls[name].validators;
       }
 
-      const formArrayClasses: FormArray = new FormArray([], formArrayValidators);
+      const formArrayClasses: UntypedFormArray = new UntypedFormArray([], formArrayValidators);
 
       modelArrayClasses.forEach((modelArrayClass: any) => {
         const modelArray = new modelArrayClass({});
-        const group: FormGroup = modelArray.uiForm.createForm();
+        const group: UntypedFormGroup = modelArray.uiForm.createForm();
         formArrayClasses.push(group);
       });
 
@@ -93,7 +93,7 @@ export class GVCore {
     this.reflectFormArrays[name] = modelArrayClasses;
   }
 
-  addValidator(control: FormControl|any, validator: ValidatorFn, msg: GVErrMessage|null) {
+  addValidator(control: UntypedFormControl|any, validator: ValidatorFn, msg: GVErrMessage|null) {
     control.validators.push(validator);
     if(!msg || !msg.text) {
       return;
@@ -102,7 +102,7 @@ export class GVCore {
     control.msg[msg.validator] = msg.text;
   }
 
-  addAsyncValidator(control: FormControl|any, validator: AsyncValidatorFn, msg: GVErrMessage|null) {
+  addAsyncValidator(control: UntypedFormControl|any, validator: AsyncValidatorFn, msg: GVErrMessage|null) {
     control.asyncValidators.push(validator);
     if(!msg || !msg.text || !msg.asyncValidator) {
       return;

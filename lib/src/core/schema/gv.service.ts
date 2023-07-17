@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { FormControlType } from './controls.enum';
 import { GVItemConfig, GVRules, GVRule, GVData } from './control-validation.interface';
@@ -8,9 +8,9 @@ import { GVDefaultValidators } from '../../validators/gv-default-validators';
 
 @Injectable()
 export class GVService {
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: UntypedFormBuilder) {}
 
-  createForm(model: typeof GVModel, schema: GVItemConfig[]): FormGroup {
+  createForm(model: typeof GVModel, schema: GVItemConfig[]): UntypedFormGroup {
     const form = model.createForm();
     this.applySchema(schema, form, undefined, model);
 
@@ -24,7 +24,7 @@ export class GVService {
 
   applySchema<T>(
     schema: GVItemConfig[],
-    form: FormGroup,
+    form: UntypedFormGroup,
     data: GVData<T> = {},
     model?: typeof GVModel,
     arrayFormGroupModel?: typeof GVModel
@@ -42,7 +42,7 @@ export class GVService {
 
       if (FormControlType.isArray(control.type)) {
         this.initFormArray(
-          abstractControl as FormArray,
+          abstractControl as UntypedFormArray,
           control.arrayFormGroup,
           (data || {})[control.name],
           control.arrayLength,
@@ -54,7 +54,7 @@ export class GVService {
   }
 
   private initFormArray<T>(
-    array: FormArray,
+    array: UntypedFormArray,
     formGroupSchema: GVItemConfig[] | undefined,
     data?: T[],
     arrayLength?: number,
