@@ -19,7 +19,7 @@ export class GV {
       text: msg
     });
   }
-// TODO validators duplications (currently duplicate in 2 places: here and default)
+// TODO fix validators duplications
   static cardNumber(msg?: string): Function {
     return GV.addControl(GVDefaultValidators.cardNumber(), {
       validator: 'card',

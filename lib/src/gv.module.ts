@@ -2,9 +2,8 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { GVDirective } from './core/directive/gv.directive';
 import { GV_DEFAULT_ERROR_MESSAGES, GV_ERROR_MESSAGES, GVErrorMessageComponent } from './components';
-import { GVService } from './core';
+import { GVService, GVDirective } from './core';
 
 @NgModule({
   imports: [

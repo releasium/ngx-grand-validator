@@ -55,7 +55,7 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 	}
 
 	private initControlStatusSub() {
-		this.sub = this.control.statusChanges.subscribe((status: FormControlStatus) => {
+    this.sub = this.control.statusChanges.subscribe((status: FormControlStatus) => {
 			if(status === 'INVALID') {
 				this.processErrors();
 				return;
