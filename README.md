@@ -6,7 +6,7 @@ developers can create models, and effortlessly add decorators to the model's
 fields for validation purposes. Say goodbye to writing extensive form validation logic by hand 
 – let **ngx-grand-validator** handle it for you!
 
-![ngx-grand-validator](https://user-images.githubusercontent.com/3638763/254534453-2f7034e0-753b-4528-ad11-fe03be1113f4.png)
+![ngx-grand-validator](https://user-images.githubusercontent.com/3638763/254569817-ca28b137-ca82-4d28-87c1-610086d15e79.png)
 
 ### Features:
 
