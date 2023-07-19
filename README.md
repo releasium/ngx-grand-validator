@@ -7,7 +7,7 @@ developers can create models, and effortlessly add decorators to the model's
 fields for validation purposes. Say goodbye to writing extensive form validation logic by hand 
 – let **ngx-grand-validator** handle it for you!
 
-![ngx-grand-validator](https://user-images.githubusercontent.com/3638763/254405200-882e02e7-f1cd-400c-89e8-d2724bc41b50.png)
+![ngx-grand-validator](https://user-images.githubusercontent.com/3638763/254534453-2f7034e0-753b-4528-ad11-fe03be1113f4.png)
 
 ### Features:
 
@@ -31,16 +31,16 @@ Install NgxGrandValidator using NPM:
 
 ```
 // Your Model
-export class UserModel extends GrandValidatonFormModel {
+export class UserModel extends GVModel {
   @GV.maxLength(120)
   @GV.minLength(5)
-  @GV.string()
-  firstName!: string;
+  @GV.required()
+  firstName: string;
 
   @GV.maxLength(120)
   @GV.lastName(5)
-  @GV.string()
-  lastName!: string;
+  @GV.required()
+  lastName: string;
 
   @GV.required()
   @GV.email()
