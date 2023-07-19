@@ -1,5 +1,5 @@
 {
-  "name": "ngx-grand-validator",
+  "name": "@releasium/ngx-grand-validator",
   "version": "0.14.0-beta.0",
   "repository": {
     "type": "git",

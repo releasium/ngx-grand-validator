@@ -1,4 +1,3 @@
-
 # @releasium/ngx-grand-validator
 
 **@releasium/ngx-grand-validator** is a powerful and easy-to-use Angular library that simplifies the process of
