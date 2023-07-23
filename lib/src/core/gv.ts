@@ -111,7 +111,7 @@ export class GV {
     });
   }
 
-  static addGroup(modelClass: Object) {
+  static addGroup(modelClass: Object): Function {
     return function(target: any, propertyKey: string) {
       const form: GVCore = target.uiForm || new GVCore();
       form.addGroup(propertyKey, modelClass);
@@ -129,7 +129,7 @@ export class GV {
     };
   }
 
-  static addControl(validator?: ValidatorFn, msg: GVErrMessage|null = null, asyncValidator?: AsyncValidatorFn) {
+  static addControl(validator?: ValidatorFn, msg: GVErrMessage|null = null, asyncValidator?: AsyncValidatorFn): Function {
     return function(target: any, propertyKey: string) {
       const form: GVCore = target.uiForm || new GVCore();
 
@@ -156,7 +156,7 @@ export class GV {
     };
   }
 
-  static addArray(modelClasses?: Object, quantityModels?: number) {
+  static addArray(modelClasses?: Object, quantityModels?: number): Function {
     return function(target: any, propertyKey: string) {
       const form: GVCore = target.uiForm || new GVCore();
       const arrayClasses = [];
