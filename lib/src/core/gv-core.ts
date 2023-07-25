@@ -1,5 +1,6 @@
 import { AsyncValidatorFn, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { GVErrMessage } from '../validators/gv-err-message';
+import { FormMessage } from '../components/error-message/form-msg.type';
 
 export class GVCore {
   private form!: UntypedFormGroup;
@@ -8,8 +9,8 @@ export class GVCore {
   reflectFormGroups: { [key: string]: any } = {};
   reflectFormArrays: { [key: string]: any } = {};
 
-  generateErrorMessages() {
-    const message: { [key: string]: Object } = {};
+  generateErrorMessages(): FormMessage {
+    const message: FormMessage = {};
 
     for(const name in this.reflectFormControls) {
       const controlMessage: { [key: string]: Object } = message[name] = {};
@@ -23,7 +24,7 @@ export class GVCore {
     for(const name in this.reflectFormGroups) {
       const groupClass = this.reflectFormGroups[name];
       const modelGroup = new groupClass();
-      message[name] = modelGroup.uiForm.genUIMsg();
+      message[name] = modelGroup.uiForm.generateErrorMessages();
     }
 
     for(const name in this.reflectFormArrays) {
@@ -31,7 +32,7 @@ export class GVCore {
 
       modelArrayClasses.forEach((modelArrayClass: any) => {
         const modelArray = new modelArrayClass({});
-        message[name] = modelArray.uiForm.genUIMsg();
+        message[name] = modelArray.uiForm.generateErrorMessages();
       });
     }
 

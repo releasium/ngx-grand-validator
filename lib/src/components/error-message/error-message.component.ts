@@ -1,5 +1,5 @@
 import { Component, Host, Inject, Input, OnDestroy, OnInit, Optional, SkipSelf } from '@angular/core';
-import { AbstractControl, ControlContainer, FormControlStatus } from '@angular/forms';
+import { AbstractControl, ControlContainer, FormControlStatus, FormGroupName } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 import { ErrorMessages, GV_ERROR_MESSAGES } from './default-msgs';
@@ -77,8 +77,9 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 		const errors: string[] = Object.keys(this.control.errors);
 		const error: string = errors[errors.length - 1];
     const data = this.control.errors[error];
-    let msg: string = this.getMsg(error);
+    let msg = this.getMsg(error) as string;
     msg = this.applyInterpolation(msg, data);
+
 		this.setMessage(msg);
 	}
 
@@ -99,7 +100,7 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 
 	private initMsgs() {
 		const controlMsgs = this.msgGroup ? this.msgGroup.formMsgGroup[this.name] : {};
-		this.msgs = controlMsgs || {};
+		this.msgs = (controlMsgs || {}) as FormMessage;
 	}
 
 	private resetSubscription() {

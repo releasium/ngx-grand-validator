@@ -3,6 +3,7 @@ import { AsyncValidatorFn, UntypedFormGroup, ValidatorFn } from '@angular/forms'
 import { GVCore } from './gv-core';
 import { GVErrMessage } from '../validators/gv-err-message';
 import { GVDefaultValidators } from '../validators/gv-default-validators';
+import { FormMessage } from '../components/error-message/form-msg.type';
 
 export class GV {
   static control() {
@@ -130,7 +131,7 @@ export class GV {
   }
 
   static addControl(validator?: ValidatorFn, msg: GVErrMessage|null = null, asyncValidator?: AsyncValidatorFn): Function {
-    return function(target: any, propertyKey: string) {
+    return (target: any, propertyKey: string) => {
       const form: GVCore = target.uiForm || new GVCore();
 
       const control = form.addControl(propertyKey, target[propertyKey]);
@@ -157,7 +158,7 @@ export class GV {
   }
 
   static addArray(modelClasses?: Object, quantityModels?: number): Function {
-    return function(target: any, propertyKey: string) {
+    return (target: any, propertyKey: string) => {
       const form: GVCore = target.uiForm || new GVCore();
       const arrayClasses = [];
 
@@ -183,6 +184,33 @@ export class GV {
   }
 }
 
+interface IGVModel {
+  validation: string;
+}
+
+export interface Type<T> {
+  new (...args: any[]): T;
+}
+
+/* static interface declaration */
+export interface IGVModelStatic<T> extends Type<Comparable<T>> {
+  createForm(): UntypedFormGroup;
+  genUIMsg(): FormMessage;
+  showUIErrors(): void;
+  getUiForm(): GVCore;
+}
+
+/* interface declaration */
+export interface Comparable<T> {
+  validation: null;
+}
+
+/* class decorator */
+export function staticImplements<T>() {
+  return (constructor: T) => {}
+}
+
+@staticImplements<IGVModelStatic<GVModel>>()  /* this statement implements both normal interface & static interface */
 export class GVModel {
   validation = null;
 

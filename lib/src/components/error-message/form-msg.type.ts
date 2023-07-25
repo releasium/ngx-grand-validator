@@ -1,3 +1,3 @@
 export interface FormMessage {
-	[key: string]: string;
+	[key: string]: string | Object;
 }

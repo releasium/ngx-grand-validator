@@ -1,20 +1,22 @@
 import { Directive, Host, Input, OnInit, Optional, SkipSelf } from '@angular/core';
+import { GVModel, IGVModelStatic } from '../gv';
+import { FormMessage } from '../../components/error-message/form-msg.type';
 
 @Directive({
   selector: '[GV]'
 })
 export class GVDirective implements OnInit {
-  @Input() gvModel: any;
-  @Input() formMsgGroup: any;
+  @Input() GV: IGVModelStatic<GVModel>;
+  @Input() formMsgGroup: FormMessage;
   @Input() formGroupName: string = '';
 
   constructor(@Optional() @Host() @SkipSelf() private gvDirective: GVDirective) {}
 
   ngOnInit() {
-    if (!this.gvModel) {
-      throw '[gvModel] attribute is required for GV directive'
+    if (!this.GV || !this.GV.genUIMsg) {
+      throw '[GV]="???" value is required for GV directive. Add your GVModel'
     }
-    this.formMsgGroup = this.gvModel.genUIMsg();
+    this.formMsgGroup = this.GV.genUIMsg();
     this.formMsgGroup = this.formMsgGroup || this.gvDirective.formMsgGroup[this.formGroupName];
   }
 }
