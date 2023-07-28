@@ -1,0 +1,42 @@
+{
+  "name": "@releasium/ngx-grand-validator",
+  "version": "0.14.0",
+  "peerDependencies": {
+    "@angular/forms": "^14.3.0",
+    "@angular/common": "^14.3.0",
+    "@angular/core": "^14.3.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/releasium/ngx-grand-validator.git"
+  },
+  "private": false,
+  "license": "MIT",
+  "keywords": [
+    "ngx-grand-validator",
+    "ngx-validator",
+    "angular validation",
+    "angular validator",
+    "angular",
+    "validator",
+    "angular reactive validation",
+    "angular reactive validator",
+    "angular grand validation",
+    "angular10",
+    "angular 2+",
+    "angular2",
+    "angular 14",
+    "angular 15",
+    "angular 16",
+    "angular 17",
+    "form validation",
+    "reactivr validation",
+    "error message",
+    "ng",
+    "ng2",
+    "ngx"
+  ]
+}
