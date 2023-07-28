@@ -2,9 +2,9 @@
   "name": "@releasium/ngx-grand-validator",
   "version": "0.15.0",
   "peerDependencies": {
-    "@angular/forms": "^14.3.0",
-    "@angular/common": "^14.3.0",
-    "@angular/core": "^14.3.0"
+    "@angular/forms": "^15.2.9",
+    "@angular/common": "^15.2.9",
+    "@angular/core": "^15.2.9"
   },
   "dependencies": {
     "tslib": "^2.3.0"
