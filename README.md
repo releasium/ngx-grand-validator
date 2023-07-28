@@ -6,16 +6,19 @@ developers can create models, and effortlessly add decorators to the model's
 fields for validation purposes. Say goodbye to writing extensive form validation logic by hand 
 – let **ngx-grand-validator** handle it for you!
 
+<a href="https://releasium.notion.site/releasium/f29bce8995574d57ac42ae4e42db27be?v=9f9f77c10589418ea4584d317b2292af">Read documentation (not full)</a>
+<i>Also Issue on GitHub are always open</i>
+
 ![ngx-grand-validator](https://user-images.githubusercontent.com/3638763/254584144-159a0bac-3824-429b-8ad7-c26f894fc657.png)
 
 ### Version
 
-| @releasium/ngx-grand-validator  | Angular |
-| ------------- | ------------- |
-| v0.14.x | v14.x.x  |
-| vX.15.x (21 Jul 2023)  | v15.x.x  |
-| vX.16.x (1 Aug 2023) | v16.x.x  |
-| Q4 2023 | v17.x.x  |
+| @releasium/ngx-grand-validator | Angular |
+|--------------------------------|---------|
+| 0.14.0                         | v18     |
+| 0.15.0                         | v17     |
+| 0.16.0 LTS                     | v16     
+| Q4 2023                        | v17     |
 
 ### Features:
 
