@@ -1,6 +1,6 @@
 {
   "name": "@releasium/ngx-grand-validator",
-  "version": "0.16.1",
+  "version": "1.16.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/releasium/ngx-grand-validator.git"
@@ -37,6 +37,8 @@
     "jasmine-core": "~3.10.0",
     "karma": "^6.3.20",
     "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage-istanbul-reporter": "^3.0.3",
+    "karma-junit-reporter": "^2.0.1",
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
@@ -44,27 +46,22 @@
     "typescript": "~5.1.6"
   },
   "keywords": [
-    "ngx-grand-validator",
-    "ngx-validator",
-    "angular validation",
-    "angular validator",
     "angular",
-    "validator",
-    "angular reactive validation",
-    "angular reactive validator",
-    "angular grand validation",
-    "angular10",
-    "angular 2+",
-    "angular2",
-    "angular 14",
-    "angular 15",
-    "angular 16",
-    "angular 17",
+    "validation",
+    "reactive forms",
+    "ngx-grand-validation",
     "form validation",
-    "reactive validation",
-    "angular error message",
-    "ng",
-    "ng2",
-    "ngx"
+    "model validation",
+    "decorator validation",
+    "client-side validation",
+    "angular forms",
+    "angular reactive forms",
+    "form validation library",
+    "model-driven forms",
+    "form validation decorators",
+    "angular form validation",
+    "form validation rules",
+    "angular form validation",
+    "ngx validator"
   ]
 }
