@@ -31,8 +31,11 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "test.ts",
+            "polyfills": "polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js"
+            "karmaConfig": "karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "scripts": []
           }
         }
       }
