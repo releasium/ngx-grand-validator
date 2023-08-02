@@ -1,6 +1,7 @@
 {
   "name": "@releasium/ngx-grand-validator",
-  "version": "1.16.1",
+  "description": "A powerful validation library for Angular applications, providing custom validators implemented using decorators.",
+  "version": "1.16.0",
   "peerDependencies": {
     "@angular/common": "^16.1.7",
     "@angular/core": "^16.1.7",
