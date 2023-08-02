@@ -15,9 +15,9 @@ fields for validation purposes. Say goodbye to writing extensive form validation
 
 | @releasium/ngx-grand-validator | Angular |
 |--------------------------------|---------|
-| 0.14.0                         | v14     |
-| 0.15.0                         | v15     |
-| 1.16.0 LTS                     | v16     |
+| v0.14.0                         | v14     |
+| v0.15.0                         | v15     |
+| v1.16.0 LTS                     | v16     |
 | Q4 2023                        | v17     |
 
 
