@@ -17,7 +17,7 @@ fields for validation purposes. Say goodbye to writing extensive form validation
 |--------------------------------|---------|
 | 0.14.0                         | v14     |
 | 0.15.0                         | v15     |
-| 0.16.0 LTS                     | v16     |
+| 1.16.0 LTS                     | v16     |
 | Q4 2023                        | v17     |
 
 
