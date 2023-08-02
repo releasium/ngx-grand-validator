@@ -1,7 +1,6 @@
 import { FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { alphanumericValidator } from './alphanumeric.validator';
 
-
 describe('Alphanumeric Validator', () => {
   it('should return null if the input is valid alphanumeric without spaces', () => {
     const control = new FormControl('AbCdEf123');
