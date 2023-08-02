@@ -11,16 +11,16 @@ import { GVDirective } from '../../core/directive/gv.directive';
   templateUrl: './error-message.html'
 })
 export class GVErrorMessageComponent implements OnInit, OnDestroy {
-  @Input() name: string;
-  @Input() control: AbstractControl;
+  @Input() name: string = '';
+  @Input() control!: AbstractControl;
 
   private msgGroup: GVDirective;
-  private sub: Subscription;
-  private msgs: FormMessage;
+  private sub!: Subscription;
+  private msgs: FormMessage = {};
   private defaultMsgs: FormMessage;
 
   parent: ControlContainer;
-  msg: string;
+  msg: string = '';
 
 	constructor(
 		@Optional() @Host() @SkipSelf() msgGroup: GVDirective,
@@ -55,8 +55,9 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 	}
 
 	private initControlStatusSub() {
+    // @ts-ignore
     this.sub = this.control.statusChanges.subscribe((status: FormControlStatus) => {
-			if(status === 'INVALID') {
+			if (status === 'INVALID') {
 				this.processErrors();
 				return;
 			}
@@ -68,7 +69,6 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 	private getMsg(error: string) {
 		return this.msgs[error] || this.defaultMsgs[error];
 	}
-
 	private processErrors() {
 		if(!this.control.errors) {
 			return;
@@ -82,7 +82,6 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 
 		this.setMessage(msg);
 	}
-
   private applyInterpolation(msg: string, data: any): string {
     if(data) {
       const keys = Object.keys(data);
@@ -93,16 +92,13 @@ export class GVErrorMessageComponent implements OnInit, OnDestroy {
 
     return msg;
   }
-
 	private setMessage(msg: string = '') {
 		this.msg = msg;
 	}
-
 	private initMsgs() {
 		const controlMsgs = this.msgGroup ? this.msgGroup.formMsgGroup[this.name] : {};
 		this.msgs = (controlMsgs || {}) as FormMessage;
 	}
-
 	private resetSubscription() {
 		if(!this.sub) {
 			return;
