@@ -81,11 +81,12 @@ In `angular.json`, replace the whole `"test"` block under `architect` with:
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "runner": "vitest",
-            "browsers": [],
-            "include": ["lib/**/*.spec.ts"]
+            "include": ["**/*.spec.ts"]
           }
         }
 ```
+
+Two details that cost the spike a detour, verified against the real builder schema: **omit `browsers`** — passing `[]` fails schema validation in this version — and `include` globs resolve relative to `projectSourceRoot` (`lib/src`), not the workspace root, so `lib/**/*.spec.ts` matches nothing.
 
 Also change the `build` builder from `@angular-devkit/build-angular:ng-packagr` to `@angular/build:ng-packagr`.
 
@@ -152,6 +153,29 @@ git commit -m "build: move to Angular 21 deps and spike the Vitest builder"
 **Interfaces:**
 - Consumes: the dependency set from Task 1.
 - Produces: a workspace where `npm run build` succeeds against the **existing v1 source**. No library source changes in this task.
+
+- [ ] **Step 0: Make `npm test` runnable on Windows**
+
+This is pulled forward from Task 15 because every task from here on runs `npm test`, and it currently does not run at all on Windows: the `./node_modules/.bin/` prefix makes cmd.exe report `'.' is not recognized as an internal or external command`. npm already puts `node_modules/.bin` on PATH, so the prefix is pure liability.
+
+In `package.json`, replace the `scripts` block with:
+
+```json
+  "scripts": {
+    "ng": "ng",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test --watch=false",
+    "publish": "npm run build && cd ./dist && npm publish --access public"
+  }
+```
+
+`start` is dropped — there is no application to serve in this workspace. `publish` is left alone here; Task 15 replaces it wholesale.
+
+Verify before continuing:
+
+Run: `npm test`
+Expected: the Vitest builder starts. It will still report TypeScript errors from the stale `tsconfig.spec.json` — that is this task's Step 2. What must NOT happen is the cmd.exe `'.' is not recognized` error.
 
 - [ ] **Step 1: Replace `tsconfig.json` entirely**
 
@@ -2659,7 +2683,7 @@ Set `"version": "2.0.0"`. Replace the `scripts` block with:
   }
 ```
 
-Three fixes: the `./node_modules/.bin/` prefixes are removed (npm already puts that on PATH, and the hardcoded POSIX separators broke on Windows); `publish` is renamed to `release`, because a script literally named `publish` shadows `npm publish` in confusing ways; and it now points at `./dist/ngx-grand-validator`, matching ng-package's actual `dest`. That path bug is why the v1 script published the wrong directory.
+Two fixes remain here (the `./node_modules/.bin/` prefix removal already landed in Task 2 Step 0): `publish` is renamed to `release`, because a script literally named `publish` shadows `npm publish` in confusing ways; and it now points at `./dist/ngx-grand-validator`, matching ng-package's actual `dest`. That path bug is why the v1 script published the wrong directory.
 
 Also add:
 
