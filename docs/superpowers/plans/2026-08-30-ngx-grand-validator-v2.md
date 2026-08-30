@@ -25,6 +25,7 @@
 - Indentation is **2 spaces** everywhere (per `.editorconfig`). Do not preserve the legacy tabs.
 - **Run the whole suite: `npm test`.** `ng test` rejects positional filter arguments, so `npm test -- some-spec` fails rather than filtering. The suite is fast (~2s of actual test time) and running all of it every time is the point — it catches the regression a filtered run would hide.
 - A `ValidatorDefinition` literal requires all four fields — `name`, `errorKey`, `factory`, `defaultMessage`. Test fixtures included; `errorKey` being mandatory and independent of `name` is the invariant that makes message-key drift unrepresentable.
+- **Metadata writes go through `ownMetadata` + `ensureControl` only.** `resolveMetadata` is read-only by contract and always returns a fresh container. Never mutate its result.
 
 ---
 
@@ -822,6 +823,28 @@ describe('MetadataStore', () => {
     expect(control.order).toEqual(['required', 'minLength', 'maxLength']);
   });
 
+  it('lets a subclass override a control the parent declared', () => {
+    class Base {}
+    class Derived extends Base {}
+    ensureControl(ownMetadata(Base), 'shared').order.push('fromBase');
+    ensureControl(ownMetadata(Derived), 'shared').order.push('fromDerived');
+
+    expect(resolveMetadata(Derived).controls.get('shared')!.order).toEqual(['fromDerived']);
+    expect(resolveMetadata(Base).controls.get('shared')!.order).toEqual(['fromBase']);
+  });
+
+  it('never returns a live reference into the store', () => {
+    class Solo {}
+    ensureControl(ownMetadata(Solo), 'a');
+
+    // Single-ancestor chains once took a fast path that returned the stored
+    // object itself, so mutating the result corrupted the store.
+    ensureControl(resolveMetadata(Solo), 'injected');
+
+    expect(resolveMetadata(Solo).controls.has('injected')).toBe(false);
+    expect(ownMetadata(Solo).controls.has('injected')).toBe(false);
+  });
+
   it('returns an empty metadata for a class that has none', () => {
     class Bare {}
     const meta = resolveMetadata(Bare);
@@ -907,7 +930,14 @@ export function ownMetadata(ctor: ModelCtor): ValidationMetadata {
   return metadata;
 }
 
-/** Metadata for `ctor` merged with every ancestor's. Subclass entries win. */
+/**
+ * Metadata for `ctor` merged with every ancestor's. Subclass entries win.
+ *
+ * READ-ONLY BY CONTRACT. Always returns a fresh container, never a live
+ * reference into STORE, so a caller cannot corrupt a class's stored metadata
+ * — or its parent's — by mutating what it got back. Writes go through
+ * `ownMetadata` + `ensureControl` exclusively.
+ */
 export function resolveMetadata(ctor: ModelCtor): ValidationMetadata {
   const chain: ValidationMetadata[] = [];
 
@@ -916,10 +946,6 @@ export function resolveMetadata(ctor: ModelCtor): ValidationMetadata {
     if (metadata) {
       chain.unshift(metadata);
     }
-  }
-
-  if (chain.length === 1) {
-    return chain[0];
   }
 
   const merged = emptyMetadata();
