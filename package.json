@@ -18,10 +18,9 @@
     "lint": "eslint .",
     "format": "prettier --write \"lib/**/*.ts\" \"*.{json,js,md}\"",
     "format:check": "prettier --check \"lib/**/*.ts\" \"*.{json,js,md}\"",
-    "prepublishOnly": "npm run lint && npm test && npm run build",
-    "release": "npm run build && npm publish ./dist/ngx-grand-validator"
+    "release": "npm run lint && npm test && npm run build && npm publish ./dist/ngx-grand-validator"
   },
-  "private": false,
+  "private": true,
   "dependencies": {
     "@angular/common": "21.2.22",
     "@angular/compiler": "21.2.22",
