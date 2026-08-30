@@ -34,7 +34,11 @@ export function ownMetadata(ctor: ModelCtor): ValidationMetadata {
 export function resolveMetadata(ctor: ModelCtor): ValidationMetadata {
   const chain: ValidationMetadata[] = [];
 
-  for (let current: unknown = ctor; typeof current === 'function'; current = Object.getPrototypeOf(current)) {
+  for (
+    let current: unknown = ctor;
+    typeof current === 'function';
+    current = Object.getPrototypeOf(current)
+  ) {
     const metadata = STORE.get(current as ModelCtor);
     if (metadata) {
       chain.unshift(metadata);

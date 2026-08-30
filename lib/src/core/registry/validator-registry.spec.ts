@@ -29,7 +29,12 @@ describe('ValidatorRegistry', () => {
       c.value === String(c.value).toUpperCase() ? null : { shout: {} };
     const registry = new ValidatorRegistry([
       ...BUILT_IN_VALIDATORS,
-      { name: 'shout', errorKey: 'shout', factory: () => shout, defaultMessage: 'Must be uppercase' },
+      {
+        name: 'shout',
+        errorKey: 'shout',
+        factory: () => shout,
+        defaultMessage: 'Must be uppercase',
+      },
     ]);
     expect(registry.create('shout', [])!(new FormControl('hi'))).toEqual({ shout: {} });
     expect(registry.messages()['shout']).toBe('Must be uppercase');

@@ -28,10 +28,10 @@ describe('Min Validator', () => {
     control.setValue(5);
     const result = validatorFn(control);
     expect(result).toEqual({
-      'min': {
-        'requiredValue': 10,
-        'actualValue': 5
-      }
+      min: {
+        requiredValue: 10,
+        actualValue: 5,
+      },
     });
   });
 
@@ -57,10 +57,10 @@ describe('Min Validator', () => {
     control.setValue('5'); // '5' as a string
     const result = validatorFn(control);
     expect(result).toEqual({
-      'min': {
-        'requiredValue': 10,
-        'actualValue': '5'
-      }
+      min: {
+        requiredValue: 10,
+        actualValue: '5',
+      },
     });
   });
 });

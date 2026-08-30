@@ -7,10 +7,13 @@ describe('Equals Validator', () => {
   let form: FormGroup;
 
   beforeEach(() => {
-    form = new FormGroup({
-      password: new FormControl(''),
-      confirmPassword: new FormControl('')
-    }, { validators: equalsValidator('password') });
+    form = new FormGroup(
+      {
+        password: new FormControl(''),
+        confirmPassword: new FormControl(''),
+      },
+      { validators: equalsValidator('password') },
+    );
 
     control = form.get('confirmPassword') as FormControl;
   });

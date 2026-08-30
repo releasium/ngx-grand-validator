@@ -58,7 +58,11 @@ export class GVService {
    * plain FormControl. Reuse the former; replace the latter. Replacing
    * unconditionally would silently discard the array's validators.
    */
-  private asFormArray(form: UntypedFormGroup, name: string, control: AbstractControl): UntypedFormArray {
+  private asFormArray(
+    form: UntypedFormGroup,
+    name: string,
+    control: AbstractControl,
+  ): UntypedFormArray {
     if (control instanceof UntypedFormArray) {
       return control;
     }

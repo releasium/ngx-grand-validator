@@ -20,7 +20,7 @@ describe('Email Validator', () => {
   it('should return an error object when the control value is not a valid email', () => {
     control.setValue('invalid-email');
     const result = validatorFn(control);
-    expect(result).toEqual({ 'email': {} });
+    expect(result).toEqual({ email: {} });
   });
 
   it('should return null when the control value is null', () => {
@@ -62,12 +62,12 @@ describe('Email Validator', () => {
   it('should not validate simple string', () => {
     control.setValue('tesasasdom');
     const result = validatorFn(control);
-    expect(result).toEqual({email: {}});
+    expect(result).toEqual({ email: {} });
   });
 
   it('should not validate not valid email', () => {
     control.setValue('tesasa@sdom');
     const result = validatorFn(control);
-    expect(result).toEqual({email: {}});
+    expect(result).toEqual({ email: {} });
   });
 });

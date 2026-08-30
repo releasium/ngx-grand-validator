@@ -71,7 +71,11 @@ export class GV {
     };
   }
 
-  static asyncControl(validator: AsyncValidatorFn, errorKey: string, msg?: string): PropertyDecorator {
+  static asyncControl(
+    validator: AsyncValidatorFn,
+    errorKey: string,
+    msg?: string,
+  ): PropertyDecorator {
     return (target: object, propertyKey: string | symbol): void => {
       const control = ensureControl(metadataFor(target as DecoratorTarget), String(propertyKey));
       control.asyncValidators.unshift(validator);

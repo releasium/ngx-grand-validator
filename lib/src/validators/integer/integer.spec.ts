@@ -26,7 +26,7 @@ describe('Integer Validator', () => {
   it('should return an error object when the control value contains non-numeric characters', () => {
     control.setValue('abc');
     const result = validatorFn(control);
-    expect(result).toEqual({ 'integer': {} });
+    expect(result).toEqual({ integer: {} });
   });
 
   it('should return null when the control value is null', () => {
@@ -50,12 +50,12 @@ describe('Integer Validator', () => {
   it('should return an error object when the control value is a valid number in string format with spaces', () => {
     control.setValue('  12345  ');
     const result = validatorFn(control);
-    expect(result).toEqual({ 'integer': {} });
+    expect(result).toEqual({ integer: {} });
   });
 
   it('should return an error object when the control value is a valid number in string format with a decimal point', () => {
     control.setValue('123.45');
     const result = validatorFn(control);
-    expect(result).toEqual({ 'integer': {} });
+    expect(result).toEqual({ integer: {} });
   });
 });

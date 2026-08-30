@@ -20,7 +20,12 @@ describe('public API', () => {
   });
 
   it('no longer exports the removed v1 symbols', () => {
-    for (const removed of ['GVModule', 'GVDefaultValidators', 'GVCore', 'GV_DEFAULT_ERROR_MESSAGES']) {
+    for (const removed of [
+      'GVModule',
+      'GVDefaultValidators',
+      'GVCore',
+      'GV_DEFAULT_ERROR_MESSAGES',
+    ]) {
       expect(removed in api).toBe(false);
     }
   });

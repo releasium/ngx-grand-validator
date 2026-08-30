@@ -21,10 +21,10 @@ describe('Exact Length Validator', () => {
     control.setValue('123');
     const result = validatorFn(control);
     expect(result).toEqual({
-      'exactLength': {
-        'requiredValue': 5,
-        'actualValue': 3
-      }
+      exactLength: {
+        requiredValue: 5,
+        actualValue: 3,
+      },
     });
   });
 

@@ -3,11 +3,15 @@ import { selectError } from './select-error';
 
 describe('selectError', () => {
   it('prefers required over everything else', () => {
-    expect(selectError({ minlength: {}, required: {} }, ['minlength', 'required'])).toBe('required');
+    expect(selectError({ minlength: {}, required: {} }, ['minlength', 'required'])).toBe(
+      'required',
+    );
   });
 
   it('picks the first key in declared source order', () => {
-    expect(selectError({ maxlength: {}, minlength: {} }, ['minlength', 'maxlength'])).toBe('minlength');
+    expect(selectError({ maxlength: {}, minlength: {} }, ['minlength', 'maxlength'])).toBe(
+      'minlength',
+    );
   });
 
   it('ignores ordered keys that are not currently in error', () => {

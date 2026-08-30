@@ -136,7 +136,11 @@ describe('GVService', () => {
 
   it('reports control availability', () => {
     const schema: GVItemConfig[] = [
-      { name: 'nickname', type: FormControlType.CONTROL, validation: [{ available: true, rules: {} }] },
+      {
+        name: 'nickname',
+        type: FormControlType.CONTROL,
+        validation: [{ available: true, rules: {} }],
+      },
     ];
     expect(service.isControlAvailable('nickname', schema)).toBe(true);
     expect(service.isControlAvailable('missing', schema)).toBe(false);

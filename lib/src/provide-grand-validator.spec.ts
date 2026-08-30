@@ -33,7 +33,12 @@ describe('provideGrandValidator', () => {
         provideZonelessChangeDetection(),
         provideGrandValidator({
           validators: [
-            { name: 'shout', errorKey: 'shout', factory: () => () => null, defaultMessage: 'Shout!' },
+            {
+              name: 'shout',
+              errorKey: 'shout',
+              factory: () => () => null,
+              defaultMessage: 'Shout!',
+            },
           ],
         }),
       ],

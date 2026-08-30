@@ -1,25 +1,23 @@
 # @releasium/ngx-grand-validator
 
 **@releasium/ngx-grand-validator** is a powerful and easy-to-use Angular library that simplifies the process of
-implementing reactive form validation in your Angular applications. With **@releasium/ngx-grand-validator**, 
+implementing reactive form validation in your Angular applications. With **@releasium/ngx-grand-validator**,
 developers can create models, and effortlessly add decorators to the model's
-fields for validation purposes. Say goodbye to writing extensive form validation logic by hand 
+fields for validation purposes. Say goodbye to writing extensive form validation logic by hand
 – let **ngx-grand-validator** handle it for you!
 
 <a href="https://releasium.notion.site/releasium/f29bce8995574d57ac42ae4e42db27be?v=9f9f77c10589418ea4584d317b2292af">Read documentation</a>
-
 
 ![ngx-grand-validator](https://user-images.githubusercontent.com/3638763/254584144-159a0bac-3824-429b-8ad7-c26f894fc657.png)
 
 ### Version
 
 | @releasium/ngx-grand-validator | Angular |
-|--------------------------------|---------|
-| v0.14.0                         | v14     |
-| v0.15.0                         | v15     |
-| v1.16.0 LTS                     | v16     |
+| ------------------------------ | ------- |
+| v0.14.0                        | v14     |
+| v0.15.0                        | v15     |
+| v1.16.0 LTS                    | v16     |
 | Q4 2023                        | v17     |
-
 
 ### Features:
 
@@ -33,11 +31,11 @@ fields for validation purposes. Say goodbye to writing extensive form validation
 - **Error Messaging**: Receive detailed error messages based on the defined validation rules to provide precise feedback to users.
 - **Consistency and Maintainability**: Centralize your validation logic within the models, making it easier to maintain and refactor in the future.
 
-
 ### How to start?
+
 Install NgxGrandValidator using NPM:
 
-``npm i @releasium/ngx-grand-validator --save``
+`npm i @releasium/ngx-grand-validator --save`
 
 ### Example of using
 

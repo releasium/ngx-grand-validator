@@ -40,10 +40,10 @@ describe('Max Length Validator', () => {
     control.setValue('12345678901'); // 11 characters, which exceeds the maximum of 10
     const result = validatorFn(control);
     expect(result).toEqual({
-      'maxlength': {
-        'requiredValue': 10,
-        'actualValue': 11
-      }
+      maxlength: {
+        requiredValue: 10,
+        actualValue: 11,
+      },
     });
   });
 

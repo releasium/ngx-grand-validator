@@ -14,7 +14,7 @@ export interface GVRuleItems {
 }
 
 export interface GVRules {
-  [key: string]: GVRule|string|number|boolean|RegExp|string[];
+  [key: string]: GVRule | string | number | boolean | RegExp | string[];
 }
 
 export interface GVRule {

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlContainer } from '@angular/forms';
 import { Observable, of, startWith, switchMap } from 'rxjs';
@@ -36,7 +30,11 @@ export class GVErrorMessageComponent {
   readonly name = input('');
   readonly control = input<AbstractControl | undefined>(undefined);
 
-  private readonly parent = inject(ControlContainer, { optional: true, host: true, skipSelf: true });
+  private readonly parent = inject(ControlContainer, {
+    optional: true,
+    host: true,
+    skipSelf: true,
+  });
   private readonly group = inject(GvModelDirective, { optional: true, host: true, skipSelf: true });
   private readonly defaults = inject(GV_ERROR_MESSAGES);
 

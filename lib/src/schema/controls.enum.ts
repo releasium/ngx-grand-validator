@@ -1,7 +1,7 @@
 export enum FormControlType {
   ARRAY = 'ARRAY',
   GROUP = 'GROUP',
-  CONTROL = 'CONTROL'
+  CONTROL = 'CONTROL',
 }
 
 export namespace FormControlType {
