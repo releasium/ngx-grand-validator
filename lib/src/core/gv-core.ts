@@ -1,6 +1,6 @@
 import { AsyncValidatorFn, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { GVErrMessage } from '../validators/gv-err-message';
-import { FormMessage } from '../components/error-message/form-msg.type';
+import { FormMessage } from './builders/form-message.type';
 
 export class GVCore {
   private form!: UntypedFormGroup;

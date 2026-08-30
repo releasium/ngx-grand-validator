@@ -1,6 +1,6 @@
 import { Directive, Host, Input, OnInit, Optional, SkipSelf } from '@angular/core';
 import { GVModel, IGVModelStatic } from '../gv';
-import { FormMessage } from '../../components/error-message/form-msg.type';
+import { FormMessage } from '../builders/form-message.type';
 
 @Directive({
   selector: '[GV]',

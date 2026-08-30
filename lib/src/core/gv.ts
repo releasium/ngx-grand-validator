@@ -3,7 +3,7 @@ import { AsyncValidatorFn, UntypedFormGroup, ValidatorFn } from '@angular/forms'
 import { GVCore } from './gv-core';
 import { GVErrMessage } from '../validators/gv-err-message';
 import { GVDefaultValidators } from '../validators/gv-default-validators';
-import { FormMessage } from '../components/error-message/form-msg.type';
+import { FormMessage } from './builders/form-message.type';
 
 export class GV {
   static control() {

@@ -3,7 +3,7 @@ import { AbstractControl, ControlContainer, FormControlStatus, FormGroupName } f
 
 import { Subscription } from 'rxjs';
 import { ErrorMessages, GV_ERROR_MESSAGES } from './default-msgs';
-import { FormMessage } from './form-msg.type';
+import { FormMessage } from '../../core/builders/form-message.type';
 import { GVDirective } from '../../core/directive/gv.directive';
 
 @Component({
