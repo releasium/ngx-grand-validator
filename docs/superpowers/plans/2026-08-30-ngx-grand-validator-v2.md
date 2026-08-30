@@ -1359,7 +1359,8 @@ git commit -m "feat(core): add buildMessages and deterministic error selection"
 - Create: `lib/src/decorators/gv.ts`
 - Create: `lib/src/decorators/gv-model.ts`
 - Create: `lib/src/decorators/gv.spec.ts`
-- Delete: `lib/src/core/gv.ts`, `lib/src/core/gv-core.ts`
+
+**This task is purely additive — delete nothing.** The v1 `core/gv.ts` and `core/gv-core.ts` stay in place until Task 13. `core/directive/gv.directive.ts` imports `GVModel` and `IGVModelStatic` from `../gv`, and `core/schema/gv.service.ts` imports `GVModel` and calls `getUiForm()` on it; neither is rewritten until Tasks 12 and 9. Deleting the v1 core here would break the build for four consecutive tasks and destroy its value as a gate. The v1 and v2 cores coexist harmlessly in the meantime — nothing imports `decorators/` yet, and the package is not published mid-plan.
 
 **Interfaces:**
 - Consumes: `ownMetadata`, `ensureControl`, `resolveMetadata` (Task 5); `buildForm` (Task 6); `buildMessages` (Task 7); the definition constants from Task 4.
@@ -1631,13 +1632,9 @@ export abstract class GVModel {
 
 Every static is a pure function of the class's metadata — no instance state, nothing cached, nothing to invalidate. v1's `showUIErrors()` has no replacement here: Angular's `form.markAllAsTouched()` already marks nested groups recursively, which v1's version did not.
 
-- [ ] **Step 5: Delete the superseded core files**
+- [ ] **Step 5: Delete nothing**
 
-```bash
-git rm lib/src/core/gv.ts lib/src/core/gv-core.ts
-```
-
-Update `lib/src/core/index.ts` to stop exporting them; the barrel is rebuilt properly in Task 10.
+Deliberately empty. `lib/src/core/gv.ts`, `lib/src/core/gv-core.ts`, and `lib/src/core/index.ts` are untouched — see this task's Files note. Task 13 removes them once their last consumer is gone.
 
 - [ ] **Step 6: Run the tests**
 
@@ -2522,11 +2519,16 @@ export type { FormMessage } from './core/builders/form-message.type';
 
 `export type` is required for the interfaces because `isolatedModules` is on.
 
-- [ ] **Step 4: Delete the module and stale barrel**
+- [ ] **Step 4: Delete the module and every remaining v1 core file**
 
 ```bash
-git rm lib/src/gv.module.ts lib/src/core/index.ts
+git rm lib/src/gv.module.ts lib/src/core/index.ts lib/src/core/gv.ts lib/src/core/gv-core.ts
 ```
+
+`core/gv.ts` (v1 `GV`, `GVModel`, `IGVModelStatic`) and `core/gv-core.ts` (`GVCore`) were deliberately left alive through Tasks 8–12 so the build stayed green while their consumers were rewritten one at a time. By now `gv.service.ts`, `gv.directive.ts`, and the error component have all been replaced, so nothing imports them. Confirm that before deleting:
+
+Run: `grep -rn "core/gv\|from '\.\./gv'\|GVCore\|IGVModelStatic" lib/src`
+Expected: no output. If anything still references them, that consumer was missed — find it rather than deleting anyway.
 
 - [ ] **Step 5: Verify nothing dangles**
 
