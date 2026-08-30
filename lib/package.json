@@ -1,38 +1,42 @@
 {
   "name": "@releasium/ngx-grand-validator",
-  "description": "A powerful validation library for Angular applications, providing custom validators implemented using decorators.",
-  "version": "1.16.0",
+  "description": "Reactive form validation for Angular, declared with decorators on your models.",
+  "version": "2.0.0",
   "peerDependencies": {
-    "@angular/common": "^16.1.7",
-    "@angular/core": "^16.1.7",
-    "@angular/forms": "^16.1.7"
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/forms": "^21.0.0"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.8.0"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/releasium/ngx-grand-validator.git"
+    "url": "git+https://github.com/releasium/ngx-grand-validator.git"
   },
-  "private": false,
+  "homepage": "https://github.com/releasium/ngx-grand-validator#readme",
+  "bugs": {
+    "url": "https://github.com/releasium/ngx-grand-validator/issues"
+  },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "keywords": [
     "angular",
     "validation",
     "reactive forms",
-    "ngx-grand-validation",
     "form validation",
     "model validation",
     "decorator validation",
-    "client-side validation",
     "angular forms",
     "angular reactive forms",
-    "form validation library",
-    "model-driven forms",
     "form validation decorators",
-    "angular form validation",
-    "form validation rules",
-    "angular form validation",
     "ngx validator"
   ]
 }
