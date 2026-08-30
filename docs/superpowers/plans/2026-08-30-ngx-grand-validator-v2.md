@@ -2142,6 +2142,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GVErrorMessageComponent } from './error-message.component';
 import { provideGrandValidator } from '../../provide-grand-validator';
+import { minLengthValidator } from '../../validators/min-length/min-length.validator';
 
 @Component({
   standalone: true,
@@ -2185,7 +2186,10 @@ describe('GVErrorMessageComponent', () => {
   });
 
   it('interpolates the error payload into the message', async () => {
-    fixture.componentInstance.control.setValidators([Validators.minLength(5)]);
+    // Must be THIS library's validator, not Angular's. Angular's Validators.minLength
+    // emits { requiredLength, actualLength }; ours emits { requiredValue, actualValue },
+    // and the default message interpolates ours.
+    fixture.componentInstance.control.setValidators([minLengthValidator(5)]);
     fixture.componentInstance.control.setValue('ab');
     fixture.componentInstance.control.markAsTouched();
     await fixture.whenStable();
@@ -2198,6 +2202,8 @@ describe('GVErrorMessageComponent', () => {
 The second test is the regression guard the spec calls for: `markAsTouched()` fires no `statusChanges`, so under `OnPush` this only passes if the component listens to `AbstractControl.events`. If it fails, the `events` wiring is wrong — do not paper over it by calling `detectChanges` differently.
 
 For the fourth test to pass, `GV_ERROR_MESSAGES['minlength']` must contain a `{{requiredValue}}` token. Update the `MIN_LENGTH` and `MAX_LENGTH` default messages in `built-in-validators.ts` to `'Must be at least {{requiredValue}} characters'` and `'Must be at most {{requiredValue}} characters'` respectively.
+
+**The token must be `{{requiredValue}}`, matching this library's own validators** (`minLengthValidator` and `maxLengthValidator` both emit `{ requiredValue, actualValue }`). Angular's stock `Validators.minLength` emits `{ requiredLength, actualLength }` instead — a different shape entirely. Writing the default message against Angular's key would leave a literal, un-interpolated `{{requiredLength}}` in front of any consumer using `@GV.minLength()` with the default message, which is why the test must exercise the library's validator rather than Angular's.
 
 - [ ] **Step 2: Run the test to verify it fails**
 
