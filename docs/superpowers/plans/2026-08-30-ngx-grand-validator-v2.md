@@ -2114,15 +2114,22 @@ git commit -m "feat: add provideGrandValidator replacing GVModule.forRoot"
 ### Task 11: Rewrite the error component with signals
 
 **Files:**
+- Create: `lib/src/ui/gv-model.directive.ts`
 - Create: `lib/src/ui/error-message/error-message.component.ts`
 - Create: `lib/src/ui/error-message/error-message.component.spec.ts`
 - Delete: nothing (see Global Constraints — Task 13 removes `lib/src/components/`)
+
+**Both implementation files land in this task.** The component injects `GvModelDirective`, so the directive must exist for the component to compile. Task 12 then adds the directive's own spec — the integration test that needs both. Splitting the two implementations across tasks would leave neither buildable alone.
 
 **Interfaces:**
 - Consumes: `GV_ERROR_MESSAGES` (Task 10); `selectError` (Task 7); `GvModelDirective` (Task 12 — import it, since the two are mutually referential through DI only).
 - Produces: `class GVErrorMessageComponent` (standalone, selector `gv-error-message`) with inputs `name: string` and `control?: AbstractControl`.
 
-**Ordering note:** implement Task 12's directive file first if the compiler complains about the import; the dependency is one-directional (component injects directive), so no cycle exists at runtime.
+**Ordering:** create `gv-model.directive.ts` first (Step 0 below), then the component. The dependency is one-directional — the component injects the directive, never the reverse — so there is no runtime cycle.
+
+- [ ] **Step 0: Create the directive**
+
+Its full source is in Task 12, Step 3. Write that file exactly as given there, then return here. Task 12 adds its spec.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -2332,8 +2339,8 @@ git commit -m "feat(ui): rebuild the error component on signals with OnPush"
 ### Task 12: Rewrite the directive
 
 **Files:**
-- Create: `lib/src/ui/gv-model.directive.ts`
 - Create: `lib/src/ui/gv-model.directive.spec.ts`
+- `lib/src/ui/gv-model.directive.ts` was already created in Task 11 Step 0 — verify it matches Step 3's source below and change it only if it does not
 - Delete: nothing (see Global Constraints — Task 13 removes `lib/src/core/directive/`)
 
 **Interfaces:**
@@ -2410,7 +2417,9 @@ If `fixture.debugElement.querySelector` is unavailable in this Angular version, 
 Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — module not found.
 
-- [ ] **Step 3: Implement the directive**
+- [ ] **Step 3: Verify the directive matches this source**
+
+Task 11 Step 0 already created this file from the listing below. Read it and confirm it matches; correct it only if it does not.
 
 ```ts
 import { Directive, computed, inject, input } from '@angular/core';
