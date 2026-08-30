@@ -1,8 +1,9 @@
-import { FormControl } from '@angular/forms';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { FormControl, ValidatorFn } from '@angular/forms';
 import { emailValidator } from './email.validator';
 
 describe('Email Validator', () => {
-  let validatorFn: any;
+  let validatorFn: ValidatorFn;
   let control: FormControl;
 
   beforeEach(() => {
@@ -61,14 +62,12 @@ describe('Email Validator', () => {
   it('should not validate simple string', () => {
     control.setValue('tesasasdom');
     const result = validatorFn(control);
-    console.log({ result });
     expect(result).toEqual({email: {}});
   });
 
   it('should not validate not valid email', () => {
     control.setValue('tesasa@sdom');
     const result = validatorFn(control);
-    console.log({ result });
     expect(result).toEqual({email: {}});
   });
 });

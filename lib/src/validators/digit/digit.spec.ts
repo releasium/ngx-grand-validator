@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { FormControl } from '@angular/forms';
 import { digitValidator } from './digit.validator';
 
