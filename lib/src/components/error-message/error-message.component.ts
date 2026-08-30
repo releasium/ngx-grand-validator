@@ -8,7 +8,8 @@ import { GVDirective } from '../../core/directive/gv.directive';
 
 @Component({
   selector: 'gv-error-message',
-  templateUrl: './error-message.html'
+  templateUrl: './error-message.html',
+  standalone: false,
 })
 export class GVErrorMessageComponent implements OnInit, OnDestroy {
   @Input() name: string = '';

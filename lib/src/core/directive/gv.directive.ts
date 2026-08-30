@@ -3,7 +3,8 @@ import { GVModel, IGVModelStatic } from '../gv';
 import { FormMessage } from '../../components/error-message/form-msg.type';
 
 @Directive({
-  selector: '[GV]'
+  selector: '[GV]',
+  standalone: false,
 })
 export class GVDirective implements OnInit {
   @Input() GV!: IGVModelStatic<GVModel>;
