@@ -24,14 +24,14 @@ export const MIN_LENGTH: ValidatorDefinition = {
   name: 'minLength',
   errorKey: 'minlength',
   factory: minLengthValidator as ValidatorDefinition['factory'],
-  defaultMessage: 'Must be at least {{requiredLength}} characters',
+  defaultMessage: 'Must be at least {{requiredValue}} characters',
 };
 
 export const MAX_LENGTH: ValidatorDefinition = {
   name: 'maxLength',
   errorKey: 'maxlength',
   factory: maxLengthValidator as ValidatorDefinition['factory'],
-  defaultMessage: 'Must be at most {{requiredLength}} characters',
+  defaultMessage: 'Must be at most {{requiredValue}} characters',
 };
 
 export const EXACT_LENGTH: ValidatorDefinition = {

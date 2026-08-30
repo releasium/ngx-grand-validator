@@ -4,6 +4,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GVErrorMessageComponent } from './error-message.component';
 import { provideGrandValidator } from '../../provide-grand-validator';
+import { minLengthValidator } from '../../validators/min-length/min-length.validator';
 
 @Component({
   standalone: true,
@@ -47,11 +48,15 @@ describe('GVErrorMessageComponent', () => {
   });
 
   it('interpolates the error payload into the message', async () => {
-    fixture.componentInstance.control.setValidators([Validators.minLength(5)]);
+    // Must be THIS library's validator, not Angular's. Angular's Validators.minLength
+    // emits { requiredLength, actualLength }; ours emits { requiredValue, actualValue },
+    // and the default message interpolates ours.
+    fixture.componentInstance.control.setValidators([minLengthValidator(5)]);
     fixture.componentInstance.control.setValue('ab');
     fixture.componentInstance.control.markAsTouched();
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(text()).toContain('5');
+    expect(text()).toBe('Must be at least 5 characters');
+    expect(text()).not.toContain('{{');
   });
 });
