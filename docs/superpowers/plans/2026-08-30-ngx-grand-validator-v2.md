@@ -207,7 +207,7 @@ Expected: the Vitest builder starts. It will still report TypeScript errors from
 }
 ```
 
-Gone from v1: `baseUrl`, the `paths` mapping to `dist/` (a library must never resolve itself through its own build output), `downlevelIteration` (unnecessary at ES2022), `sourceMap`, `declaration: false`, and `moduleResolution: node` (superseded by `module: preserve`).
+Gone from v1: `baseUrl`, the `paths` mapping to `dist/` (a library must never resolve itself through its own build output), `downlevelIteration` (unnecessary at ES2022), `sourceMap`, `declaration: false`, `moduleResolution: node` (superseded by `module: preserve`), and `forceConsistentCasingInFileNames` (TypeScript 5 defaults it to `true`, so stating it is noise). Also note this task's file list touches `package.json` for Step 0.
 
 - [ ] **Step 2: Replace `tsconfig.spec.json` entirely**
 
@@ -263,6 +263,38 @@ git rm polyfills.ts karma.conf.js lib/package-lock.json
 ```
 
 `test.ts` is deliberately kept until Task 3, because branch B may still need a setup file.
+
+- [ ] **Step 5b: Bridge the v1 declarations past Angular's standalone default**
+
+Angular 19 flipped the default for an unset `standalone` flag from `false` to `true`. v1's directive and component set it nowhere, so under Angular 21 they are implicitly standalone and `GVModule` cannot declare or export them:
+
+```
+lib/src/gv.module.ts:14:5 - error NG6008: Directive GVDirective is standalone, and cannot be declared in an NgModule.
+lib/src/gv.module.ts:18:5 - error NG6004: Can't be exported from this NgModule, as it must be imported first
+```
+
+Add `standalone: false` to both decorators — one line each, nothing else:
+
+In `lib/src/core/directive/gv.directive.ts`:
+
+```ts
+@Directive({
+  selector: '[GV]',
+  standalone: false,
+})
+```
+
+In `lib/src/components/error-message/error-message.component.ts`:
+
+```ts
+@Component({
+  selector: 'gv-error-message',
+  templateUrl: './error-message.html',
+  standalone: false,
+})
+```
+
+This is a deliberate throwaway bridge, not a design decision. Both files are deleted outright in Tasks 11 and 12, and `gv.module.ts` goes in Task 13. Its only job is to keep `npm run build` green as a working gate for Tasks 3–10; without it the build stays red for ten tasks and stops being a signal. Do **not** instead convert these to real standalone components here — that is Tasks 11 and 12's work, and doing it now would mix a rewrite into a toolchain task.
 
 - [ ] **Step 6: Verify the build**
 
