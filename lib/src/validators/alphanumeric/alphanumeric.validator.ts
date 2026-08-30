@@ -7,7 +7,7 @@ export const alphanumericValidator = (params: {whiteSpace: boolean} = {whiteSpac
 			return null;
 		}
 
-		const error: {[key: string]: any} = {};
+		const error: ValidationErrors = {};
 		const key = params.whiteSpace ? 'alphanumericWithSpaces' : 'alphanumeric';
 		const alphanumericWithSpaces = /^[a-zA-Z0-9 ]+$/;
 		const alphanumeric = /^[a-zA-Z0-9]+$/;

@@ -18,7 +18,7 @@ export interface GVRules {
 }
 
 export interface GVRule {
-  value: any;
+  value: unknown;
   msg?: string;
   disabled?: boolean;
 }
