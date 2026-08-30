@@ -49,6 +49,28 @@ describe('MetadataStore', () => {
     expect(control.order).toEqual(['required', 'minLength', 'maxLength']);
   });
 
+  it('lets a subclass override a control the parent declared', () => {
+    class Base {}
+    class Derived extends Base {}
+    ensureControl(ownMetadata(Base), 'shared').order.push('fromBase');
+    ensureControl(ownMetadata(Derived), 'shared').order.push('fromDerived');
+
+    expect(resolveMetadata(Derived).controls.get('shared')!.order).toEqual(['fromDerived']);
+    expect(resolveMetadata(Base).controls.get('shared')!.order).toEqual(['fromBase']);
+  });
+
+  it('never returns a live reference into the store', () => {
+    class Solo {}
+    ensureControl(ownMetadata(Solo), 'a');
+
+    // Single-ancestor chains once took a fast path that returned the stored
+    // object itself, so mutating the result corrupted the store.
+    ensureControl(resolveMetadata(Solo), 'injected');
+
+    expect(resolveMetadata(Solo).controls.has('injected')).toBe(false);
+    expect(ownMetadata(Solo).controls.has('injected')).toBe(false);
+  });
+
   it('returns an empty metadata for a class that has none', () => {
     class Bare {}
     const meta = resolveMetadata(Bare);

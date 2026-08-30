@@ -23,7 +23,14 @@ export function ownMetadata(ctor: ModelCtor): ValidationMetadata {
   return metadata;
 }
 
-/** Metadata for `ctor` merged with every ancestor's. Subclass entries win. */
+/**
+ * Metadata for `ctor` merged with every ancestor's. Subclass entries win.
+ *
+ * READ-ONLY BY CONTRACT. Always returns a fresh container, never a live
+ * reference into STORE, so a caller cannot corrupt a class's stored metadata
+ * — or its parent's — by mutating what it got back. Writes go through
+ * `ownMetadata` + `ensureControl` exclusively.
+ */
 export function resolveMetadata(ctor: ModelCtor): ValidationMetadata {
   const chain: ValidationMetadata[] = [];
 
@@ -32,10 +39,6 @@ export function resolveMetadata(ctor: ModelCtor): ValidationMetadata {
     if (metadata) {
       chain.unshift(metadata);
     }
-  }
-
-  if (chain.length === 1) {
-    return chain[0];
   }
 
   const merged = emptyMetadata();
