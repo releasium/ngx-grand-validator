@@ -1771,6 +1771,40 @@ describe('GVService', () => {
     expect((form.get('rows') as UntypedFormArray).length).toBe(2);
   });
 
+  it('reuses a FormArray the model already declared, keeping its validators', () => {
+    class Row extends GVModel {
+      @GV.control()
+      label!: string;
+    }
+
+    class Declared extends GVModel {
+      @GV.minLength(2)
+      @GV.array(Row, 0)
+      items!: unknown[];
+    }
+
+    const schema: GVItemConfig[] = [
+      {
+        name: 'items',
+        type: FormControlType.ARRAY,
+        arrayLength: 2,
+        arrayFormGroup: [{ name: 'label', type: FormControlType.CONTROL }],
+      },
+    ];
+
+    const form = Declared.createForm();
+    const before = form.get('items') as UntypedFormArray;
+    expect(before).toBeInstanceOf(UntypedFormArray);
+    expect(before.validator).not.toBeNull();
+
+    service.applySchema(schema, form);
+
+    const after = form.get('items') as UntypedFormArray;
+    expect(after).toBe(before);
+    expect(after.length).toBe(2);
+    expect(after.validator).not.toBeNull();
+  });
+
   it('reports control availability', () => {
     const schema: GVItemConfig[] = [
       { name: 'nickname', type: FormControlType.CONTROL, validation: [{ available: true, rules: {} }] },
@@ -1843,9 +1877,26 @@ export class GVService {
       }
 
       if (FormControlType.isArray(item.type)) {
-        this.initFormArray(control as UntypedFormArray, item, data[item.name]);
+        this.initFormArray(this.asFormArray(form, item.name, control), item, data[item.name]);
       }
     }
+  }
+
+  /**
+   * A schema ARRAY entry may target a property the model declared with
+   * `@GV.array()` — already a FormArray, possibly carrying validators that
+   * `buildForm` attached — or one declared with `@GV.control()`, which is a
+   * plain FormControl. Reuse the former; replace the latter. Replacing
+   * unconditionally would silently discard the array's validators.
+   */
+  private asFormArray(form: UntypedFormGroup, name: string, control: AbstractControl): UntypedFormArray {
+    if (control instanceof UntypedFormArray) {
+      return control;
+    }
+
+    const array = new UntypedFormArray([], control.validator ? [control.validator] : []);
+    form.setControl(name, array);
+    return array;
   }
 
   private initFormArray<T>(array: UntypedFormArray, item: GVItemConfig, data?: T[]): void {
