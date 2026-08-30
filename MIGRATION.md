@@ -210,6 +210,17 @@ now actually shows `'Enter a valid card number'`, where in v1 it silently showed
 If you were relying on the (broken) v1 default appearing despite passing a custom message, your custom message
 will now be the one shown.
 
+### `cardNumber` errors now carry `{}` instead of `null`
+
+v1's `cardNumber` validator returned `{ cardNumber: null }` on failure. v2 returns `{ cardNumber: {} }`.
+
+This matters for two reasons. First, message interpolation reads `Object.keys(payload)` to substitute
+`{{token}}` placeholders — that can't work against `null`, so no `cardNumber` message could ever be
+interpolated under v1, even though the pattern is used by other validators like `minLength`. Second, if your
+code inspects `control.errors['cardNumber']` directly and compares it to `null` — `if (errors.cardNumber ===
+null)` — that check will no longer match; check for the key's presence (`'cardNumber' in errors` or
+`!!errors?.['cardNumber']`) instead.
+
 ### Subclassed models now inherit their parent's validation
 
 ```ts
