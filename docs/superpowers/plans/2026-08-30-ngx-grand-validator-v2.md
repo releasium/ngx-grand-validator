@@ -2825,7 +2825,7 @@ Set `"version": "2.0.0"`. Replace the `scripts` block with:
     "ng": "ng",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test --watch=false",
     "lint": "eslint .",
     "format": "prettier --write \"lib/**/*.ts\" \"*.{json,js,md}\"",
     "format:check": "prettier --check \"lib/**/*.ts\" \"*.{json,js,md}\"",
