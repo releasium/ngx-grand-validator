@@ -26,6 +26,7 @@
 - **Run the whole suite: `npm test`.** `ng test` rejects positional filter arguments, so `npm test -- some-spec` fails rather than filtering. The suite is fast (~2s of actual test time) and running all of it every time is the point — it catches the regression a filtered run would hide.
 - A `ValidatorDefinition` literal requires all four fields — `name`, `errorKey`, `factory`, `defaultMessage`. Test fixtures included; `errorKey` being mandatory and independent of `name` is the invariant that makes message-key drift unrepresentable.
 - **Metadata writes go through `ownMetadata` + `ensureControl` only.** `resolveMetadata` is read-only by contract and always returns a fresh container. Never mutate its result.
+- **Tasks 8–12 are purely additive. Task 13 does every v1 deletion.** The v1 barrel chain is `lib/src/index.ts` → `core/index.ts` → `core/gv.ts`, `core/gv-core.ts`, `core/directive/`, `core/schema/`, plus `gv.module.ts` → `components/`. Deleting any one of those while a later task still has to rewrite its consumer breaks the build for several tasks running and destroys `npm run build` as a gate. So v1 and v2 implementations coexist from Task 8 through Task 12 — two `GVModel`s, two `GVService`s, two error components. That is expected and harmless: nothing imports the v2 tree until Task 13 rewrites the barrel, and the package is not published mid-plan.
 
 ---
 
@@ -1657,7 +1658,7 @@ git commit -m "feat(core): rebuild GV decorators and GVModel on metadata store"
 - Create: `lib/src/schema/control-validation.interface.ts`
 - Create: `lib/src/schema/controls.enum.ts`
 - Create: `lib/src/schema/gv.service.spec.ts`
-- Delete: `lib/src/core/schema/` (whole directory)
+- Delete: nothing (see Global Constraints — Task 13 removes `lib/src/core/schema/`)
 
 **Interfaces:**
 - Consumes: `ValidatorRegistry` (Task 4); `GVModelStatic` (Task 8).
@@ -1910,11 +1911,9 @@ Four v1 problems are gone: the `@ts-ignore` dynamic lookup on `GVDefaultValidato
 
 `setValidators` deliberately replaces rather than merges — that is v1's behaviour, and schema rules are meant to override the model's declaration.
 
-- [ ] **Step 5: Delete the old schema directory**
+- [ ] **Step 5: Delete nothing**
 
-```bash
-git rm -r lib/src/core/schema
-```
+Deliberately empty. `lib/src/core/schema/` stays until Task 13 — `core/index.ts` re-exports all three of its files and `gv.module.ts` reaches `GVService` through that barrel. Two `GVService` classes coexist meanwhile; only the v1 one is reachable from the barrel, and nothing constructs it.
 
 - [ ] **Step 6: Run the tests**
 
@@ -1938,8 +1937,8 @@ git commit -m "refactor(schema): resolve schema rules through the validator regi
 - Create: `lib/src/provide-grand-validator.ts`
 - Create: `lib/src/core/registry/error-messages.token.ts`
 - Create: `lib/src/provide-grand-validator.spec.ts`
-- Rewrite: `lib/src/index.ts`, `lib/src/core/index.ts`
-- Delete: `lib/src/components/error-message/default-msgs.ts`
+- Barrels are NOT touched here; Task 13 rewrites `lib/src/index.ts` and deletes `lib/src/core/index.ts`
+- Delete: nothing (see Global Constraints — Task 13 removes `lib/src/components/`)
 
 **Interfaces:**
 - Consumes: `ValidatorRegistry`, `BUILT_IN_VALIDATORS` (Task 4); `GVService` (Task 9).
@@ -2015,7 +2014,9 @@ export type ErrorMessages = Record<string, string>;
 export const GV_ERROR_MESSAGES = new InjectionToken<ErrorMessages>('GV_ERROR_MESSAGES');
 ```
 
-Then `git rm lib/src/components/error-message/default-msgs.ts`. Its `GV_DEFAULT_ERROR_MESSAGES` constant is gone: defaults now come from `ValidatorRegistry.messages()`, which is what makes drift impossible.
+Leave `lib/src/components/error-message/default-msgs.ts` in place — `gv.module.ts` and the v1 error component both import `GV_DEFAULT_ERROR_MESSAGES` from it, and Task 13 deletes the lot together. For v2, `GV_DEFAULT_ERROR_MESSAGES` is gone: defaults come from `ValidatorRegistry.messages()`, which is what makes drift impossible.
+
+Note the old and new files declare tokens with the same debug NAME but they are distinct `InjectionToken` instances. That is harmless while the v1 tree is unreachable from v2, but it means you must import `GV_ERROR_MESSAGES` from the new path in every v2 file — an import from the old path would compile and then silently fail to resolve at runtime.
 
 - [ ] **Step 4: Create `provide-grand-validator.ts`**
 
@@ -2064,7 +2065,7 @@ git commit -m "feat: add provideGrandValidator replacing GVModule.forRoot"
 **Files:**
 - Create: `lib/src/ui/error-message/error-message.component.ts`
 - Create: `lib/src/ui/error-message/error-message.component.spec.ts`
-- Delete: `lib/src/components/` (whole directory)
+- Delete: nothing (see Global Constraints — Task 13 removes `lib/src/components/`)
 
 **Interfaces:**
 - Consumes: `GV_ERROR_MESSAGES` (Task 10); `selectError` (Task 7); `GvModelDirective` (Task 12 — import it, since the two are mutually referential through DI only).
@@ -2259,11 +2260,9 @@ function interpolate(template: string, payload: unknown): string {
 
 `toSignal` owns the subscription, so v1's manual `Subscription`, `ngOnDestroy`, and `resetSubscription` are all gone. `replaceAll` replaces v1's `replace`, which only substituted the first occurrence of a token.
 
-- [ ] **Step 4: Delete the old component directory**
+- [ ] **Step 4: Delete nothing**
 
-```bash
-git rm -r lib/src/components
-```
+Deliberately empty. `lib/src/components/` stays until Task 13 — `lib/src/index.ts` and `gv.module.ts` both import from it. The v1 and v2 error components coexist and share the `gv-error-message` selector, which is safe only because the v1 one is declared in the v1 NgModule and the v2 one is standalone and imported explicitly. Do not import both into the same component.
 
 - [ ] **Step 5: Run the tests**
 
@@ -2284,7 +2283,7 @@ git commit -m "feat(ui): rebuild the error component on signals with OnPush"
 **Files:**
 - Create: `lib/src/ui/gv-model.directive.ts`
 - Create: `lib/src/ui/gv-model.directive.spec.ts`
-- Delete: `lib/src/core/directive/` (whole directory)
+- Delete: nothing (see Global Constraints — Task 13 removes `lib/src/core/directive/`)
 
 **Interfaces:**
 - Consumes: `GVModelStatic` (Task 8); `FormMessage` (Task 7).
@@ -2409,11 +2408,9 @@ export class GvModelDirective {
 
 v1 threw from `ngOnInit` when `[GV]` was missing. v2 drops the throw: a missing model now degrades to registry default messages, which is the useful behaviour, and the nested-group fallback — dead code in v1, because `formMsgGroup` was always assigned before the fallback was tested — is now reachable.
 
-- [ ] **Step 4: Delete the old directive directory**
+- [ ] **Step 4: Delete nothing**
 
-```bash
-git rm -r lib/src/core/directive
-```
+Deliberately empty. `lib/src/core/directive/` stays until Task 13 — `core/index.ts` re-exports it and `gv.module.ts` declares it. The v1 `[GV]` and v2 `[gvModel]` directives have different selectors, so they cannot collide.
 
 - [ ] **Step 5: Run the whole suite**
 
@@ -2435,7 +2432,7 @@ git commit -m "feat(ui): replace [GV] with a signals-based [gvModel] directive"
 
 **Files:**
 - Rewrite: `lib/src/index.ts`
-- Delete: `lib/src/gv.module.ts`, `lib/src/core/index.ts`, `lib/src/core/gv-core.ts` (if any remain)
+- Delete: the whole v1 tree — `lib/src/gv.module.ts`, `lib/src/core/index.ts`, `lib/src/core/gv.ts`, `lib/src/core/gv-core.ts`, `lib/src/core/schema/`, `lib/src/core/directive/`, `lib/src/components/`, `lib/src/validators/gv-default-validators.ts`, `lib/src/validators/gv-err-message.ts`
 - Create: `lib/src/public-api.spec.ts`
 
 **Interfaces:**
@@ -2519,16 +2516,27 @@ export type { FormMessage } from './core/builders/form-message.type';
 
 `export type` is required for the interfaces because `isolatedModules` is on.
 
-- [ ] **Step 4: Delete the module and every remaining v1 core file**
+- [ ] **Step 4: Delete the entire v1 tree**
+
+Tasks 8–12 were deliberately additive so `npm run build` stayed green while each v1 consumer was replaced one at a time. This step collects every deletion they deferred. After Step 3's barrel rewrite, nothing reaches any of it.
 
 ```bash
+git rm -r lib/src/core/schema lib/src/core/directive lib/src/components
 git rm lib/src/gv.module.ts lib/src/core/index.ts lib/src/core/gv.ts lib/src/core/gv-core.ts
+git rm lib/src/validators/gv-default-validators.ts lib/src/validators/gv-err-message.ts
 ```
 
-`core/gv.ts` (v1 `GV`, `GVModel`, `IGVModelStatic`) and `core/gv-core.ts` (`GVCore`) were deliberately left alive through Tasks 8–12 so the build stayed green while their consumers were rewritten one at a time. By now `gv.service.ts`, `gv.directive.ts`, and the error component have all been replaced, so nothing imports them. Confirm that before deleting:
+`gv-default-validators.ts` is the pass-through layer the `ValidatorRegistry` replaced; `gv-err-message.ts` is the `GVErrMessage` interface only v1's `GV`/`GVCore` used.
 
-Run: `grep -rn "core/gv\|from '\.\./gv'\|GVCore\|IGVModelStatic" lib/src`
-Expected: no output. If anything still references them, that consumer was missed — find it rather than deleting anyway.
+Verify nothing dangles before you delete, and again after:
+
+Run: `grep -rn "core/index\|core/gv\|core/schema\|core/directive\|components/\|gv\.module\|GVCore\|IGVModelStatic\|GVDefaultValidators\|GVErrMessage\|GV_DEFAULT_ERROR_MESSAGES" lib/src`
+Expected after deletion: no output. If a reference survives, find the consumer that was missed rather than deleting anyway — a dangling import will fail the build, but a stale re-export would silently ship v1 code.
+
+Then confirm the v1 directories are actually gone:
+
+Run: `ls lib/src`
+Expected: exactly `core`, `decorators`, `schema`, `ui`, `utils`, `validators`, `index.ts`, `provide-grand-validator.ts`, `public-api.spec.ts` — no `components`, no `gv.module.ts`.
 
 - [ ] **Step 5: Verify nothing dangles**
 
