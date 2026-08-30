@@ -60,7 +60,7 @@ Replace the entire `dependencies` and `devDependencies` objects with:
     "@angular/cli": "21.2.22",
     "@angular/compiler-cli": "21.2.22",
     "@types/node": "^20.19.0",
-    "jsdom": "^30.0.0",
+    "jsdom": "^26.0.0",
     "ng-packagr": "^21.1.0",
     "typescript": "~5.9.0",
     "vitest": "^4.1.0"
@@ -70,6 +70,8 @@ Replace the entire `dependencies` and `devDependencies` objects with:
 Note what left: `@angular/router`, `@angular/animations`, `@angular/platform-browser-dynamic`, `path`, `zone.js`, and every `karma-*` / `jasmine-*` package. None are needed. `path` was a Node-polyfill package that was never imported.
 
 **Vitest must be `^4.1.0`, not 3.x.** `@angular/build@21.2.22` declares `vitest@^4.0.8` as an optional peer; pinning 3.x makes `npm install` fail with `ERESOLVE` before anything else runs. Vitest 4.1.11 supports Node 20, so this is compatible with the environment.
+
+**jsdom must be `^26.0.0`, not 28/30.** jsdom 30 requires Node `^22.22.3 || ^24.15.0 || >=26`, and on Node 20 every jsdom-backed test dies with `webidl.util.markAsUncloneable is not a function`. That failure is silent about its cause and easy to misread as an Angular problem. jsdom 26 declares `>=18` and is verified green on this project's Node 20.20.0 — 13 files, 85 tests. Since the whole reason this project targets Angular 21 rather than 22 is to keep Node 20 working, a jsdom that needs Node 22 defeats the point.
 
 - [ ] **Step 2: Point the test target at the new builder**
 
