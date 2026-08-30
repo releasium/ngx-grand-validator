@@ -280,6 +280,18 @@ The repo currently mixes indentation: `validators/`, `utils/`, and `components/e
 
 ---
 
+## 9a. Amendments (2026-08-30, during plan pre-flight)
+
+Approved by the maintainer after the plan's pre-flight conflict scan. These override the sections they name.
+
+1. **§5.2 / §5.4 — `markAllTouched()` is removed, not renamed.** The plan's draft backed it with a module-level "most recently created form" WeakMap, which is hidden state with a two-forms footgun. Angular's `FormGroup.markAllAsTouched()` already does the job recursively. `showUIErrors()` therefore has **no** v2 replacement; `MIGRATION.md` points users at Angular's method.
+
+2. **§5.5 — source order needs its own carrier.** `buildMessages` only emits error keys the consumer overrode, so deriving order from it yields `[]` for any uncustomized field and silently restores v1's arbitrary selection. A sibling `buildOrder(metadata): Record<string, string[]>` is added, surfaced as `GVModel.order()` and `GvModelDirective.orderFor(name)`.
+
+3. **`GVModelStatic` gains `order()`** and loses `markAllTouched()`, following from the two above.
+
+---
+
 ## 10. Definition of done
 
 - `npm run build` produces a publishable package on Angular 21.

@@ -1045,6 +1045,7 @@ git commit -m "feat(core): add buildForm as a pure metadata-to-FormGroup functio
 - Produces:
   - `interface FormMessage { [key: string]: string | FormMessage }`
   - `function buildMessages(metadata: ValidationMetadata): FormMessage`
+  - `function buildOrder(metadata: ValidationMetadata): Record<string, string[]>`
   - `function selectError(errors: ValidationErrors, order: readonly string[]): string | null`
 
 - [ ] **Step 1: Write the failing tests**
@@ -1122,7 +1123,32 @@ describe('buildMessages', () => {
     });
   });
 });
+
+describe('buildOrder', () => {
+  it('exposes each control source order, independent of custom messages', () => {
+    class M {}
+    const control = ensureControl(ownMetadata(M), 'field');
+    control.order.push('pattern', 'minlength');
+
+    expect(buildOrder(ownMetadata(M))).toEqual({ field: ['pattern', 'minlength'] });
+  });
+
+  it('returns an entry for a control with no custom messages at all', () => {
+    class M {}
+    ensureControl(ownMetadata(M), 'bare').order.push('required');
+    expect(buildOrder(ownMetadata(M))['bare']).toEqual(['required']);
+  });
+
+  it('returns an empty record for metadata with no controls', () => {
+    class Bare {}
+    expect(buildOrder(ownMetadata(Bare))).toEqual({});
+  });
+});
 ```
+
+Add `buildOrder` to this file's imports alongside `buildMessages`.
+
+`buildOrder` exists because the order list must reach the error component **independently of custom messages**. Deriving order from message keys — as an earlier draft of this plan did — yields `[]` for any field the consumer did not customize, which silently reinstates v1's arbitrary error selection.
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
@@ -1208,6 +1234,23 @@ export function buildMessages(metadata: ValidationMetadata): FormMessage {
 
 v1 looped over every array model and overwrote the same key each time, so only the last won — identical output for identical models, wasted work otherwise. Taking the first model makes that explicit.
 
+- [ ] **Step 5b: Add `buildOrder` to `build-messages.ts`**
+
+```ts
+/**
+ * Per-control error-key order, top-most decorator first. Kept separate from
+ * buildMessages because order must be known even for controls the consumer
+ * never wrote a custom message for.
+ */
+export function buildOrder(metadata: ValidationMetadata): Record<string, string[]> {
+  const result: Record<string, string[]> = {};
+  metadata.controls.forEach((control, name) => {
+    result[name] = [...control.order];
+  });
+  return result;
+}
+```
+
 - [ ] **Step 6: Run the tests**
 
 Run: `npm test`
@@ -1234,8 +1277,10 @@ git commit -m "feat(core): add buildMessages and deterministic error selection"
 - Consumes: `ownMetadata`, `ensureControl`, `resolveMetadata` (Task 5); `buildForm` (Task 6); `buildMessages` (Task 7); the definition constants from Task 4.
 - Produces:
   - `class GV` with statics: `control()`, `group(model)`, `array(model, count)`, `required(msg?)`, `minLength(v, msg?)`, `maxLength(v, msg?)`, `exactLength(v, msg?)`, `min(v, msg?)`, `max(v, msg?)`, `digit(msg?)`, `email(msg?)`, `integer(msg?)`, `pattern(re, msg?)`, `equals(prop, msg?)`, `cardNumber(msg?)`, `alphanumeric(msg?)`, `alphanumericWithSpaces(msg?)`
-  - `class GVModel` with statics `createForm(): UntypedFormGroup`, `messages(): FormMessage`, `markAllTouched(): void`
-  - `interface GVModelStatic { createForm(): UntypedFormGroup; messages(): FormMessage; markAllTouched(): void }`
+  - `class GVModel` with statics `createForm(): UntypedFormGroup`, `messages(): FormMessage`, `order(): Record<string, string[]>`
+  - `interface GVModelStatic { createForm(): UntypedFormGroup; messages(): FormMessage; order(): Record<string, string[]> }`
+
+**No `markAllTouched`.** An earlier draft added one backed by a module-level "last created form" WeakMap. Angular's `FormGroup.markAllAsTouched()` already does exactly that job, recursively, with no hidden state — the wrapper existed only to mirror v1's `showUIErrors()`. `MIGRATION.md` (Task 16) points v1 users at Angular's method instead.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1245,6 +1290,7 @@ Create `lib/src/decorators/gv.spec.ts`:
 import { describe, it, expect } from 'vitest';
 import { GV } from './gv';
 import { GVModel } from './gv-model';
+import { selectError } from '../core/builders/select-error';
 
 class User extends GVModel {
   @GV.required()
@@ -1254,6 +1300,11 @@ class User extends GVModel {
 
   @GV.cardNumber('Bad card')
   card!: string;
+
+  // pattern is declared above minLength, so pattern must win the ordering test.
+  @GV.pattern(/^\d+$/)
+  @GV.minLength(5)
+  code!: string;
 }
 
 class Admin extends User {
@@ -1264,7 +1315,7 @@ class Admin extends User {
 describe('GV decorators', () => {
   it('builds a form with a control per decorated field', () => {
     const form = User.createForm();
-    expect(Object.keys(form.controls).sort()).toEqual(['card', 'name']);
+    expect(Object.keys(form.controls).sort()).toEqual(['card', 'code', 'name']);
   });
 
   it('applies the declared validators', () => {
@@ -1278,27 +1329,27 @@ describe('GV decorators', () => {
   });
 
   it('records source order with the top-most decorator first', () => {
-    expect(User.messages()['name']).toEqual({});
+    // `code` declares @GV.pattern above @GV.minLength. Decorators apply
+    // bottom-up, so this asserts the unshift convention actually reverses them.
+    expect(User.order()['code']).toEqual(['pattern', 'minlength']);
+  });
+
+  it('selects the top-most decorator error when several fire at once', () => {
     const form = User.createForm();
-    form.get('name')!.setValue('');
-    expect(form.get('name')!.hasError('required')).toBe(true);
+    form.get('code')!.setValue('ab'); // violates both pattern and minlength
+    const errors = form.get('code')!.errors!;
+
+    expect(Object.keys(errors).sort()).toEqual(['minlength', 'pattern']);
+    expect(selectError(errors, User.order()['code'])).toBe('pattern');
   });
 
   it('inherits parent metadata in a subclass — broken in v1', () => {
     const form = Admin.createForm();
-    expect(Object.keys(form.controls).sort()).toEqual(['card', 'level', 'name']);
+    expect(Object.keys(form.controls).sort()).toEqual(['card', 'code', 'level', 'name']);
   });
 
   it('does not leak subclass fields back onto the parent', () => {
     expect(Object.keys(User.createForm().controls)).not.toContain('level');
-  });
-
-  it('marks every control touched', () => {
-    const form = User.createForm();
-    expect(form.get('name')!.touched).toBe(false);
-    User.markAllTouched();
-    // markAllTouched operates on the most recently created form.
-    expect(form.get('name')!.touched).toBe(true);
   });
 });
 ```
@@ -1464,37 +1515,33 @@ import { UntypedFormGroup } from '@angular/forms';
 import { resolveMetadata } from '../core/metadata/metadata-store';
 import { ModelCtor } from '../core/metadata/validation-metadata';
 import { buildForm } from '../core/builders/build-form';
-import { buildMessages } from '../core/builders/build-messages';
+import { buildMessages, buildOrder } from '../core/builders/build-messages';
 import { FormMessage } from '../core/builders/form-message.type';
 
 /** The static shape the [gvModel] directive requires. */
 export interface GVModelStatic {
   createForm(): UntypedFormGroup;
   messages(): FormMessage;
-  markAllTouched(): void;
+  order(): Record<string, string[]>;
 }
-
-const LAST_FORM = new WeakMap<ModelCtor, UntypedFormGroup>();
 
 export abstract class GVModel {
   static createForm(this: ModelCtor): UntypedFormGroup {
-    const form = buildForm(resolveMetadata(this));
-    LAST_FORM.set(this, form);
-    return form;
+    return buildForm(resolveMetadata(this));
   }
 
   static messages(this: ModelCtor): FormMessage {
     return buildMessages(resolveMetadata(this));
   }
 
-  /** Marks the most recently created form's controls touched, revealing errors. */
-  static markAllTouched(this: ModelCtor): void {
-    LAST_FORM.get(this)?.markAllAsTouched();
+  /** Per-control error-key order, top-most decorator first. */
+  static order(this: ModelCtor): Record<string, string[]> {
+    return buildOrder(resolveMetadata(this));
   }
 }
 ```
 
-`markAllAsTouched()` is Angular's own recursive implementation, replacing v1's `showUIErrors`, which walked `reflectFormGroups[group].prototype.uiForm` and only marked top-level controls.
+Every static is a pure function of the class's metadata — no instance state, nothing cached, nothing to invalidate. v1's `showUIErrors()` has no replacement here: Angular's `form.markAllAsTouched()` already marks nested groups recursively, which v1's version did not.
 
 - [ ] **Step 5: Delete the superseded core files**
 
@@ -2102,7 +2149,8 @@ export class GVErrorMessageComponent {
     }
 
     const overrides = (this.group?.messagesFor(this.name()) ?? {}) as FormMessage;
-    const key = selectError(state.errors, this.orderFor(overrides));
+    const order = this.group?.orderFor(this.name()) ?? [];
+    const key = selectError(state.errors, order);
     if (!key) {
       return '';
     }
@@ -2110,10 +2158,6 @@ export class GVErrorMessageComponent {
     const template = (overrides[key] as string | undefined) ?? this.defaults[key] ?? '';
     return interpolate(template, state.errors[key]);
   });
-
-  private orderFor(overrides: FormMessage): string[] {
-    return this.group?.orderFor(this.name()) ?? Object.keys(overrides);
-  }
 }
 
 function interpolate(template: string, payload: unknown): string {
@@ -2264,15 +2308,16 @@ export class GvModelDirective {
     return typeof nested === 'object' && nested !== null ? nested : {};
   });
 
+  /** Error-key order per control, top-most decorator first. */
+  readonly order = computed<Record<string, string[]>>(() => this.gvModel()?.order() ?? {});
+
   messagesFor(name: string): FormMessage {
     const entry = this.messages()[name];
     return typeof entry === 'object' && entry !== null ? entry : {};
   }
 
-  orderFor(name: string): string[] | undefined {
-    const entry = this.messagesFor(name);
-    const keys = Object.keys(entry);
-    return keys.length ? keys : undefined;
+  orderFor(name: string): string[] {
+    return this.order()[name] ?? [];
   }
 }
 ```
@@ -2684,7 +2729,7 @@ It must cover every breaking change, each with a before/after snippet:
 - `GVModule.forRoot()` → `provideGrandValidator()`; the module is gone and the directive and component are standalone.
 - `[GV]="Model"` → `[gvModel]="Model"`; `formGroupName` input → `gvGroupName`.
 - `Model.genUIMsg()` → `Model.messages()`.
-- `Model.showUIErrors()` → `Model.markAllTouched()` — and note it now marks nested groups too, which v1 did not.
+- `Model.showUIErrors()` → **removed with no replacement**; call Angular's own `form.markAllAsTouched()`. Unlike v1's version, Angular's marks nested groups recursively, so this is a behaviour improvement as well as a rename.
 - `GV.alphanumeric({ whiteSpace: true })` → `GV.alphanumericWithSpaces()`.
 - `GV.min(v, msg, ignoreValues)` → `GV.min(v, msg)`; the third parameter was never used.
 - `GVDefaultValidators` removed → use `ValidatorRegistry` / `BUILT_IN_VALIDATORS`.
