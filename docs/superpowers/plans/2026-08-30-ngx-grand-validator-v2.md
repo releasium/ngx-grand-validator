@@ -60,14 +60,16 @@ Replace the entire `dependencies` and `devDependencies` objects with:
     "@angular/cli": "21.2.22",
     "@angular/compiler-cli": "21.2.22",
     "@types/node": "^20.19.0",
-    "jsdom": "^26.0.0",
+    "jsdom": "^30.0.0",
     "ng-packagr": "^21.1.0",
     "typescript": "~5.9.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.0"
   }
 ```
 
 Note what left: `@angular/router`, `@angular/animations`, `@angular/platform-browser-dynamic`, `path`, `zone.js`, and every `karma-*` / `jasmine-*` package. None are needed. `path` was a Node-polyfill package that was never imported.
+
+**Vitest must be `^4.1.0`, not 3.x.** `@angular/build@21.2.22` declares `vitest@^4.0.8` as an optional peer; pinning 3.x makes `npm install` fail with `ERESOLVE` before anything else runs. Vitest 4.1.11 supports Node 20, so this is compatible with the environment.
 
 - [ ] **Step 2: Point the test target at the new builder**
 
