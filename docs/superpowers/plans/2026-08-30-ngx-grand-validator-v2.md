@@ -2829,10 +2829,13 @@ Set `"version": "2.0.0"`. Replace the `scripts` block with:
     "lint": "eslint .",
     "format": "prettier --write \"lib/**/*.ts\" \"*.{json,js,md}\"",
     "format:check": "prettier --check \"lib/**/*.ts\" \"*.{json,js,md}\"",
-    "prepublishOnly": "npm run lint && npm test && npm run build",
-    "release": "npm run build && npm publish ./dist/ngx-grand-validator"
+    "release": "npm run lint && npm test && npm run build && npm publish ./dist/ngx-grand-validator"
   }
 ```
+
+Also set `"private": true` on the ROOT `package.json` (v1 had `false`).
+
+**Why the gates are inline in `release` rather than in `prepublishOnly`.** npm sources lifecycle scripts from the package.json of the thing being published. `npm publish ./dist/ngx-grand-validator` therefore reads the ng-packagr-generated manifest in that directory, which has no `scripts` field at all — so a root `prepublishOnly` never runs on the one path a release actually takes. Worse, it *would* fire on a bare `npm publish` from the root, which would publish the source tree rather than the built package. Marking the root private removes that second path entirely, and putting lint/test/build directly in `release` puts the gate where the release really happens. With no CI, this is the only thing standing between a broken build and npm.
 
 Two fixes remain here (the `./node_modules/.bin/` prefix removal already landed in Task 2 Step 0): `publish` is renamed to `release`, because a script literally named `publish` shadows `npm publish` in confusing ways; and it now points at `./dist/ngx-grand-validator`, matching ng-package's actual `dest`. That path bug is why the v1 script published the wrong directory.
 
