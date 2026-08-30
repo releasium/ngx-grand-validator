@@ -23,6 +23,8 @@
 - Every commit message ends with a trailing line: `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>`
 - Never use `git commit --no-verify` or skip hooks.
 - Indentation is **2 spaces** everywhere (per `.editorconfig`). Do not preserve the legacy tabs.
+- **Run the whole suite: `npm test`.** `ng test` rejects positional filter arguments, so `npm test -- some-spec` fails rather than filtering. The suite is fast (~2s of actual test time) and running all of it every time is the point — it catches the regression a filtered run would hide.
+- A `ValidatorDefinition` literal requires all four fields — `name`, `errorKey`, `factory`, `defaultMessage`. Test fixtures included; `errorKey` being mandatory and independent of `name` is the invariant that makes message-key drift unrepresentable.
 
 ---
 
@@ -515,7 +517,7 @@ Note the last test introduces `errorKey`. Most validators emit their own name, b
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- validator-registry`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — cannot resolve `./validator-registry`.
 
 - [ ] **Step 3: Create `validator-definition.ts`**
@@ -839,7 +841,7 @@ describe('MetadataStore', () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- metadata-store`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — cannot resolve `./metadata-store`.
 
 - [ ] **Step 3: Create `validation-metadata.ts`**
@@ -941,7 +943,7 @@ export function ensureControl(metadata: ValidationMetadata, name: string): Contr
 
 - [ ] **Step 5: Run the tests**
 
-Run: `npm test -- metadata-store`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: PASS, 7 tests.
 
 - [ ] **Step 6: Commit**
@@ -1029,7 +1031,7 @@ describe('buildForm', () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- build-form`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — cannot resolve `./build-form`.
 
 - [ ] **Step 3: Implement `build-form.ts`**
@@ -1079,7 +1081,7 @@ Note this replaces `UntypedFormBuilder` with direct construction. `FormBuilder` 
 
 - [ ] **Step 4: Run the tests**
 
-Run: `npm test -- build-form`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: PASS, 5 tests.
 
 - [ ] **Step 5: Commit**
@@ -1212,7 +1214,7 @@ Add `buildOrder` to this file's imports alongside `buildMessages`.
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
-Run: `npm test -- select-error build-messages`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — modules not found.
 
 - [ ] **Step 3: Create `form-message.type.ts`**
@@ -1416,7 +1418,7 @@ describe('GV decorators', () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- decorators`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — cannot resolve `./gv`.
 
 - [ ] **Step 3: Create `gv.ts`**
@@ -1613,7 +1615,7 @@ Update `lib/src/core/index.ts` to stop exporting them; the barrel is rebuilt pro
 
 - [ ] **Step 6: Run the tests**
 
-Run: `npm test -- decorators`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: PASS, 7 tests. In particular the `cardNumber` custom-message test and the subclass-inheritance test both pass — these are the two v1 bugs this task fixes.
 
 - [ ] **Step 7: Commit**
@@ -1759,7 +1761,7 @@ Note the `rows` field must be declared `@GV.control()` on the model so `createFo
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- schema`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — cannot resolve `./gv.service`.
 
 - [ ] **Step 3: Move the unchanged schema types**
@@ -1977,7 +1979,7 @@ describe('provideGrandValidator', () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- provide-grand-validator`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — module not found.
 
 - [ ] **Step 3: Create `error-messages.token.ts`**
@@ -2022,7 +2024,7 @@ export function provideGrandValidator(config: GrandValidatorConfig = {}): Enviro
 
 - [ ] **Step 5: Run the tests**
 
-Run: `npm test -- provide-grand-validator`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: PASS, 3 tests.
 
 - [ ] **Step 6: Commit**
@@ -2117,7 +2119,7 @@ For the fourth test to pass, `GV_ERROR_MESSAGES['minlength']` must contain a `{{
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- error-message`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — module not found.
 
 - [ ] **Step 3: Implement the component**
@@ -2242,7 +2244,7 @@ git rm -r lib/src/components
 
 - [ ] **Step 5: Run the tests**
 
-Run: `npm test -- error-message`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: PASS, 4 tests.
 
 - [ ] **Step 6: Commit**
@@ -2332,7 +2334,7 @@ If `fixture.debugElement.querySelector` is unavailable in this Angular version, 
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- gv-model.directive`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — module not found.
 
 - [ ] **Step 3: Implement the directive**
@@ -2453,7 +2455,7 @@ describe('public API', () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm test -- public-api`
+Run: `npm test` (see Global Constraints: the Angular builder rejects positional filter args)
 Expected: FAIL — `GVModule` still exported.
 
 - [ ] **Step 3: Rewrite `lib/src/index.ts`**
