@@ -2351,7 +2351,7 @@ git commit -m "feat(ui): rebuild the error component on signals with OnPush"
 
 **Interfaces:**
 - Consumes: `GVModelStatic` (Task 8); `FormMessage` (Task 7).
-- Produces: `class GvModelDirective` (standalone, selector `[gvModel]`) with inputs `gvModel?: GVModelStatic` and `gvGroupName: string`, and methods `messagesFor(name: string): FormMessage`, `orderFor(name: string): string[] | undefined`.
+- Produces: `class GvModelDirective` (standalone, selector `[gvModel]`) with inputs `gvModel?: GVModelStatic` and `gvGroupName: string`, and methods `messagesFor(name: string): FormMessage`, `orderFor(name: string): string[]` (always an array, `[]` when unknown — never `undefined`, since the error component feeds it straight into `selectError`).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -2399,6 +2399,19 @@ describe('GvModelDirective', () => {
     const fixture = TestBed.createComponent(Host);
     fixture.detectChanges();
     fixture.componentInstance.form.get('name')!.markAsTouched();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Name is required');
+  });
+
+  it('renders immediately for a control already touched and invalid at init', async () => {
+    // Closes a gap in Task 11's four tests, which all start from an untouched,
+    // valid control. This exercises the startWith(null) path: without it the
+    // component stays blank until some later, unrelated event arrives.
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.form.get('name')!.markAsTouched();
+    fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
 
