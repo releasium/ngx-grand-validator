@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { UntypedFormArray } from '@angular/forms';
 import { GV } from './gv';
 import { GVModel } from './gv-model';
 import { selectError } from '../core/builders/select-error';
@@ -61,5 +62,56 @@ describe('GV decorators', () => {
 
   it('does not leak subclass fields back onto the parent', () => {
     expect(Object.keys(User.createForm().controls)).not.toContain('level');
+  });
+
+  it('keeps item messages for a dynamic array declared with no count', () => {
+    class Row extends GVModel {
+      @GV.required('Label is required')
+      label!: string;
+    }
+    class Holder extends GVModel {
+      @GV.array(Row)
+      rows!: unknown[];
+    }
+
+    expect(Holder.messages()['rows']).toEqual({ label: { required: 'Label is required' } });
+    expect((Holder.createForm().get('rows') as UntypedFormArray).length).toBe(0);
+  });
+
+  it('keeps both the array own message and the item tree when a name is control and array', () => {
+    class Row extends GVModel {
+      @GV.required('Label is required')
+      label!: string;
+    }
+    class Holder extends GVModel {
+      @GV.required('Add at least one row')
+      @GV.array(Row, 1)
+      rows!: unknown[];
+    }
+
+    expect(Holder.messages()['rows']).toEqual({
+      required: 'Add at least one row',
+      label: { required: 'Label is required' },
+    });
+    expect(Holder.order()['rows']).toEqual(['required']);
+
+    const rows = Holder.createForm().get('rows') as UntypedFormArray;
+    expect(rows.length).toBe(1);
+    expect(rows.validator).not.toBeNull();
+  });
+
+  it('builds the declared number of array items from the model', () => {
+    class Row extends GVModel {
+      @GV.control()
+      label!: string;
+    }
+    class Holder extends GVModel {
+      @GV.array(Row, 3)
+      rows!: unknown[];
+    }
+
+    const rows = Holder.createForm().get('rows') as UntypedFormArray;
+    expect(rows.length).toBe(3);
+    expect(rows.at(0).get('label')).not.toBeNull();
   });
 });

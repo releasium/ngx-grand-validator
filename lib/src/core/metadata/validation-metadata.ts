@@ -15,10 +15,15 @@ export interface ControlMetadata {
   readonly order: string[];
 }
 
+export interface ArrayMetadata {
+  readonly model: ModelCtor;
+  readonly count: number;
+}
+
 export interface ValidationMetadata {
   readonly controls: Map<string, ControlMetadata>;
   readonly groups: Map<string, ModelCtor>;
-  readonly arrays: Map<string, ModelCtor[]>;
+  readonly arrays: Map<string, ArrayMetadata>;
 }
 
 export function emptyMetadata(): ValidationMetadata {

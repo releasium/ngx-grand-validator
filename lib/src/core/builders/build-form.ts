@@ -27,10 +27,10 @@ export function buildForm(metadata: ValidationMetadata): UntypedFormGroup {
     controls[name] = buildForm(resolveMetadata(modelCtor));
   });
 
-  metadata.arrays.forEach((modelCtors, name) => {
+  metadata.arrays.forEach((array, name) => {
     // An array name may also carry control-level validators; reuse them here.
     const arrayValidators = metadata.controls.get(name)?.validators ?? [];
-    const items = modelCtors.map((modelCtor) => buildForm(resolveMetadata(modelCtor)));
+    const items = Array.from({ length: array.count }, () => buildForm(resolveMetadata(array.model)));
     controls[name] = new UntypedFormArray(items, arrayValidators);
   });
 

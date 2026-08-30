@@ -8,7 +8,12 @@ import { GVService } from './schema/gv.service';
 export interface GrandValidatorConfig {
   /** Overrides for individual default messages, keyed by error key. */
   readonly messages?: Partial<ErrorMessages>;
-  /** Extra validators, usable from both decorators and schema rules. */
+  /**
+   * Extra validators, consumed through `GVService` and schema rules. `GV`'s
+   * decorators import the built-in definition constants directly and never
+   * consult this registry, so a validator registered here is not reachable
+   * from a `@GV.*` decorator.
+   */
   readonly validators?: readonly ValidatorDefinition[];
 }
 

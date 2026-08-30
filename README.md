@@ -209,10 +209,29 @@ export class SignupComponent {
 resolve through the same `ValidatorRegistry` as the decorators, so custom validators registered via
 `provideGrandValidator({ validators: [...] })` work here too.
 
+## Known limitations
+
+`<gv-error-message>` resolves its control once, from the `control`/`name`/`gvGroupName` inputs it has at the
+time; that resolution is not reactive to the *identity* of the form changing later. Concretely:
+
+- Reassigning the form (e.g. `this.form = Model.createForm()` on a reset) leaves every `<gv-error-message>`
+  bound to the discarded `AbstractControl`s — they stop updating and appear permanently blank.
+- The same applies to a control added later via `addControl`, or to `GVService.applySchema()` called after the
+  view has already initialized, since it uses `form.setControl` under the hood.
+
+This is not a regression in v2 — v1 resolved once in `ngOnInit` and had the same behavior. It is not being
+fixed in this release. Prefer patching values into the existing form (`form.patchValue(...)`) over reassigning
+it; if you must swap the form instance, force the affected `<gv-error-message>` elements to re-render (e.g. by
+changing a `@for`/`*ngIf` track key) so they re-resolve against the new controls.
+
 ## Contributing
 
 We welcome contributions from the open-source community. If you have found a bug or have a feature request,
 please submit an issue or a pull request on our GitHub repository.
+
+`lib/package.json`'s `publishConfig` does not set `provenance`. npm can only generate provenance from CI with
+an OIDC token, and this project has no CI, so `npm run release` is run from a developer machine — enabling
+`provenance` there makes `npm publish` fail outright. Re-enable it (`"provenance": true`) if CI is ever added.
 
 ## License
 

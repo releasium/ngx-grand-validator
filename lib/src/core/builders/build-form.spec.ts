@@ -36,11 +36,11 @@ describe('buildForm', () => {
     expect(form.get('address.street')).not.toBeNull();
   });
 
-  it('builds a FormArray with one group per declared model', () => {
+  it('builds a FormArray with one group per declared count', () => {
     class Item {}
     class Holder {}
     ensureControl(ownMetadata(Item), 'label');
-    ownMetadata(Holder).arrays.set('items', [Item, Item, Item]);
+    ownMetadata(Holder).arrays.set('items', { model: Item, count: 3 });
 
     const array = buildForm(ownMetadata(Holder)).get('items') as UntypedFormArray;
     expect(array).toBeInstanceOf(UntypedFormArray);
@@ -48,9 +48,10 @@ describe('buildForm', () => {
     expect(array.at(0).get('label')).not.toBeNull();
   });
 
-  it('creates an empty FormArray when no models are declared', () => {
+  it('creates an empty FormArray when count is 0', () => {
+    class Item {}
     class Holder {}
-    ownMetadata(Holder).arrays.set('items', []);
+    ownMetadata(Holder).arrays.set('items', { model: Item, count: 0 });
     const array = buildForm(ownMetadata(Holder)).get('items') as UntypedFormArray;
     expect(array.length).toBe(0);
   });

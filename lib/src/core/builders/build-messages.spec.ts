@@ -32,7 +32,18 @@ describe('buildMessages', () => {
     class Item {}
     class Holder {}
     ensureControl(ownMetadata(Item), 'label').messages.set('required', 'Label required');
-    ownMetadata(Holder).arrays.set('items', [Item, Item]);
+    ownMetadata(Holder).arrays.set('items', { model: Item, count: 2 });
+
+    expect(buildMessages(ownMetadata(Holder))).toEqual({
+      items: { label: { required: 'Label required' } },
+    });
+  });
+
+  it('nests array item messages even when count is 0 — the normal dynamic-array case', () => {
+    class Item {}
+    class Holder {}
+    ensureControl(ownMetadata(Item), 'label').messages.set('required', 'Label required');
+    ownMetadata(Holder).arrays.set('items', { model: Item, count: 0 });
 
     expect(buildMessages(ownMetadata(Holder))).toEqual({
       items: { label: { required: 'Label required' } },

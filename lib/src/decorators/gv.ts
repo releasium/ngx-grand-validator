@@ -66,8 +66,7 @@ export class GV {
 
   static array(model: ModelCtor, count = 0): PropertyDecorator {
     return (target: object, propertyKey: string | symbol): void => {
-      const models = Array.from({ length: count }, () => model);
-      metadataFor(target as DecoratorTarget).arrays.set(String(propertyKey), models);
+      metadataFor(target as DecoratorTarget).arrays.set(String(propertyKey), { model, count });
     };
   }
 
