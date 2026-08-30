@@ -30,7 +30,7 @@ export const cardNumberValidator = (): ValidatorFn => {
 			.reduce((acc: number, item: number) => acc + item);
 
 		if(sum % 10) {
-			return { 'cardNumber': null };
+			return { cardNumber: {} };
 		}
 
 		return null;
