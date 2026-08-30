@@ -100,6 +100,40 @@ describe('GVService', () => {
     expect((form.get('rows') as UntypedFormArray).length).toBe(2);
   });
 
+  it('reuses a FormArray the model already declared, keeping its validators', () => {
+    class Row extends GVModel {
+      @GV.control()
+      label!: string;
+    }
+
+    class Declared extends GVModel {
+      @GV.minLength(2)
+      @GV.array(Row, 0)
+      items!: unknown[];
+    }
+
+    const schema: GVItemConfig[] = [
+      {
+        name: 'items',
+        type: FormControlType.ARRAY,
+        arrayLength: 2,
+        arrayFormGroup: [{ name: 'label', type: FormControlType.CONTROL }],
+      },
+    ];
+
+    const form = Declared.createForm();
+    const before = form.get('items') as UntypedFormArray;
+    expect(before).toBeInstanceOf(UntypedFormArray);
+    expect(before.validator).not.toBeNull();
+
+    service.applySchema(schema, form);
+
+    const after = form.get('items') as UntypedFormArray;
+    expect(after).toBe(before);
+    expect(after.length).toBe(2);
+    expect(after.validator).not.toBeNull();
+  });
+
   it('reports control availability', () => {
     const schema: GVItemConfig[] = [
       { name: 'nickname', type: FormControlType.CONTROL, validation: [{ available: true, rules: {} }] },

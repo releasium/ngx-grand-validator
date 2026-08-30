@@ -46,11 +46,26 @@ export class GVService {
       }
 
       if (FormControlType.isArray(item.type)) {
-        const array = new UntypedFormArray([]);
-        form.setControl(item.name, array);
-        this.initFormArray(array, item, data[item.name]);
+        this.initFormArray(this.asFormArray(form, item.name, control), item, data[item.name]);
       }
     }
+  }
+
+  /**
+   * A schema ARRAY entry may target a property the model declared with
+   * `@GV.array()` — already a FormArray, possibly carrying validators that
+   * `buildForm` attached — or one declared with `@GV.control()`, which is a
+   * plain FormControl. Reuse the former; replace the latter. Replacing
+   * unconditionally would silently discard the array's validators.
+   */
+  private asFormArray(form: UntypedFormGroup, name: string, control: AbstractControl): UntypedFormArray {
+    if (control instanceof UntypedFormArray) {
+      return control;
+    }
+
+    const array = new UntypedFormArray([], control.validator ? [control.validator] : []);
+    form.setControl(name, array);
+    return array;
   }
 
   private initFormArray<T>(array: UntypedFormArray, item: GVItemConfig, data?: T[]): void {
