@@ -459,7 +459,7 @@ Open the page and check each row. Every one must hold:
 | Click into **First name**, then click out without typing | `This field is required` | consumer override merged over the registry default (the default text is *Please fill out this mandatory field*) |
 | Type `a` into First name | `Must be at least 2 characters` | `{{requiredValue}}` interpolation from the built bundle |
 | Type `1234` into Payment card and click out | `Enter a valid card number` | custom decorator message — v1 silently ignored this one |
-| Clear everything, press **Submit** | all four fields show `This field is required`; `valid: false` | `required` wins the error-priority rule; `markAllAsTouched` reached every control |
+| Clear everything, press **Submit** | First name, Email and Access level show `This field is required`; Payment card shows nothing; `valid: false` | `required` wins the error-priority rule; `markAllAsTouched` reached every control. Payment card carries only `@GV.cardNumber()`, and every validator except `required` passes an empty value by design |
 | Count the inputs | four, including **Access level** | subclass inheritance through the packaged build |
 | Fill all four validly (`Ann`, `ann@example.com`, `4242424242424242`, `1`) | every message clears; `valid: true` | messages clear on VALID; zoneless change detection re-rendered without zone.js |
 

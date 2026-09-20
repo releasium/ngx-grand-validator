@@ -114,7 +114,7 @@ What each interaction demonstrates:
 | Touch empty `firstName` → "This field is required" | consumer override merged over defaults |
 | Type `a` → "Must be at least 2 characters" | `{{requiredValue}}` interpolation |
 | Type `1234` into `paymentCard` (fails Luhn) → "Enter a valid card number" | custom decorator message (v1 silently ignored it) |
-| Submit empty → every field shows `required` | `required` always wins the error-priority rule; `markAllAsTouched` recursion |
+| Submit empty → `firstName`, `email`, `accessLevel` show `required`; `paymentCard` shows nothing | `required` always wins the error-priority rule; `markAllAsTouched` recursion. `paymentCard` carries only `@GV.cardNumber()`, and every validator except `required` passes an empty value by design |
 | Four fields rendered | subclass inheritance |
 
 **Schema form.** `inject(GVService).createForm(Signup, schema)`. One input, one `<gv-error-message>`, one live value readout. Typing three characters shows the `minlength` default message, proving schema rules resolve through the registry.
