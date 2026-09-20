@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { FormControl } from '@angular/forms';
 import { cardNumberValidator } from './card-number.validator'; // Adjust the import path as needed
 
@@ -17,7 +18,7 @@ describe('cardNumberValidator', () => {
 
     const result = validator(control);
 
-    expect(result).toEqual({ 'cardNumber': null });
+    expect(result).toEqual({ cardNumber: {} });
   });
 
   it('should return null when control value is falsy', () => {

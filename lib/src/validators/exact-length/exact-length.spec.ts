@@ -1,8 +1,9 @@
-import { FormControl } from '@angular/forms';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { FormControl, ValidatorFn } from '@angular/forms';
 import { exactLengthValidator } from './exact-length.validator';
 
 describe('Exact Length Validator', () => {
-  let validatorFn: any;
+  let validatorFn: ValidatorFn;
   let control: FormControl;
 
   beforeEach(() => {
@@ -20,10 +21,10 @@ describe('Exact Length Validator', () => {
     control.setValue('123');
     const result = validatorFn(control);
     expect(result).toEqual({
-      'exactLength': {
-        'requiredValue': 5,
-        'actualValue': 3
-      }
+      exactLength: {
+        requiredValue: 5,
+        actualValue: 3,
+      },
     });
   });
 

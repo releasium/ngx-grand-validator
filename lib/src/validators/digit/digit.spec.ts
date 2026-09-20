@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { FormControl } from '@angular/forms';
 import { digitValidator } from './digit.validator';
 
@@ -20,7 +21,7 @@ describe('Digit Validator', () => {
     const validatorFn = digitValidator();
     const control = new FormControl('abc');
     const result = validatorFn(control);
-    expect(result).toEqual({ 'digit': {} });
+    expect(result).toEqual({ digit: {} });
   });
 
   it('should return null when the control value is null', () => {

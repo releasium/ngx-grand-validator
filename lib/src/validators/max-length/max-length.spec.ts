@@ -1,8 +1,9 @@
-import { FormControl } from '@angular/forms';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { FormControl, ValidatorFn } from '@angular/forms';
 import { maxLengthValidator } from './max-length.validator';
 
 describe('Max Length Validator', () => {
-  let validatorFn: any;
+  let validatorFn: ValidatorFn;
   let control: FormControl;
 
   beforeEach(() => {
@@ -39,10 +40,10 @@ describe('Max Length Validator', () => {
     control.setValue('12345678901'); // 11 characters, which exceeds the maximum of 10
     const result = validatorFn(control);
     expect(result).toEqual({
-      'maxlength': {
-        'requiredValue': 10,
-        'actualValue': 11
-      }
+      maxlength: {
+        requiredValue: 10,
+        actualValue: 11,
+      },
     });
   });
 

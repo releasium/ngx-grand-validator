@@ -1,8 +1,9 @@
-import { FormControl } from '@angular/forms';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { FormControl, ValidatorFn } from '@angular/forms';
 import { minLengthValidator } from './min-length.validator';
 
 describe('Min Length Validator', () => {
-  let validatorFn: any;
+  let validatorFn: ValidatorFn;
   let control: FormControl;
 
   beforeEach(() => {
@@ -39,10 +40,10 @@ describe('Min Length Validator', () => {
     control.setValue('123'); // 3 characters, which is less than the minimum of 5
     const result = validatorFn(control);
     expect(result).toEqual({
-      'minlength': {
-        'requiredValue': 5,
-        'actualValue': 3
-      }
+      minlength: {
+        requiredValue: 5,
+        actualValue: 3,
+      },
     });
   });
 
@@ -50,10 +51,10 @@ describe('Min Length Validator', () => {
     control.setValue('123'); // '123' as a string
     const result = validatorFn(control);
     expect(result).toEqual({
-      'minlength': {
-        'requiredValue': 5,
-        'actualValue': 3
-      }
+      minlength: {
+        requiredValue: 5,
+        actualValue: 3,
+      },
     });
   });
 

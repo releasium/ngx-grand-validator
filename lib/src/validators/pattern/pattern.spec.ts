@@ -1,8 +1,9 @@
-import { FormControl } from '@angular/forms';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { FormControl, ValidatorFn } from '@angular/forms';
 import { patternValidator } from './pattern.validator';
 
 describe('Pattern Validator', () => {
-  let validatorFn: any;
+  let validatorFn: ValidatorFn;
   let control: FormControl;
 
   beforeEach(() => {
@@ -20,7 +21,7 @@ describe('Pattern Validator', () => {
   it('should return an error object when the control value does not match the pattern', () => {
     control.setValue('Invalid@');
     const result = validatorFn(control);
-    expect(result).toEqual({ 'pattern': {} });
+    expect(result).toEqual({ pattern: {} });
   });
 
   it('should return null when the control value is null', () => {
@@ -50,6 +51,6 @@ describe('Pattern Validator', () => {
   it('should return null when the control value is a valid number in string format with spaces', () => {
     control.setValue(' 12345  '); // Valid number string with spaces
     const result = validatorFn(control);
-    expect(result).toEqual({ 'pattern': {} });
+    expect(result).toEqual({ pattern: {} });
   });
 });

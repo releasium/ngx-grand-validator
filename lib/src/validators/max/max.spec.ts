@@ -1,8 +1,9 @@
-import { FormControl } from '@angular/forms';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { FormControl, ValidatorFn } from '@angular/forms';
 import { maxValidator } from './max.validator';
 
 describe('Max Validator', () => {
-  let validatorFn: any;
+  let validatorFn: ValidatorFn;
   let control: FormControl;
 
   beforeEach(() => {
@@ -27,10 +28,10 @@ describe('Max Validator', () => {
     control.setValue(150);
     const result = validatorFn(control);
     expect(result).toEqual({
-      'max': {
-        'requiredValue': 100,
-        'actualValue': 150
-      }
+      max: {
+        requiredValue: 100,
+        actualValue: 150,
+      },
     });
   });
 
@@ -56,10 +57,10 @@ describe('Max Validator', () => {
     control.setValue('120');
     const result = validatorFn(control);
     expect(result).toEqual({
-      'max': {
-        'requiredValue': 100,
-        'actualValue': '120'
-      }
+      max: {
+        requiredValue: 100,
+        actualValue: '120',
+      },
     });
   });
 });

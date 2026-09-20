@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { alphanumericValidator } from './alphanumeric.validator';
 
